@@ -4,8 +4,8 @@
     <description>
         Hello World sample application that responds to the deviceready event.
     </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+    <author email="softeng10@radford.edu" href="http://www.radford.edu/softeng10">
+        Bowtie Code
     </author>
     <feature name="http://api.phonegap.com/1.0/device" />
     <preference name="permissions" value="none" />
@@ -24,7 +24,7 @@
     <preference name="android-minSdkVersion" value="7" />
     <preference name="android-installLocation" value="auto" />
     <icon src="icon.png" />
-    <icon gap:density="ldpi" gap:platform="android" src="res/icon/android/icon-36-ldpi.png" />
+    <icon gap:density="ldpi"  gap:platform="android" src="res/icon/android/icon-36-ldpi.png" />
     <icon gap:density="mdpi" gap:platform="android" src="res/icon/android/icon-48-mdpi.png" />
     <icon gap:density="hdpi" gap:platform="android" src="res/icon/android/icon-72-hdpi.png" />
     <icon gap:density="xhdpi" gap:platform="android" src="res/icon/android/icon-96-xhdpi.png" />
