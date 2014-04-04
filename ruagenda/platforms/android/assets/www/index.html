@@ -6,12 +6,13 @@ It really ought to be more informative than this.  It just isn't -->
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-
+        <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        
         <!-- jQuery css - if/when we use themeroller, replace this
         with the structure and icon css and add the theme after -->
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
-
+        
         <!-- phonegap/cordova js -->
         <script type="text/javascript" src="phonegap.js"></script>
         <!-- jQeury base -->
@@ -22,50 +23,61 @@ It really ought to be more informative than this.  It just isn't -->
         <title>Hello World</title>
     </head>
     <body>
-        <div class="app">
-            <!-- Start of first page -->
-            <div data-role="page" id="foo">
+        <div class="app"><!-- phonegap put this outermost div here -->
+            <!-- Start of the main page -->
+            <div data-role="page" id="main">
 
                 <div data-role="header">
-                    <h1>Foo</h1>
+                    <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
+                    <h1>RU Agenda</h1>
+                    <a href="#" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
-
-                <div role="main" class="ui-content">
+                    
+                <div data-role="tabs" id="tabs">
+                  
+                  <div data-role="navbar">
+                    <ul>
+                      <li><a href="#one" data-ajax="false" class="ui-btn-active">one</a></li>
+                      <li><a href="#two" data-ajax="false">two</a></li>
+                      <li><a href="#three" data-ajax="false">three</a></li>
+                    </ul>
+                  </div>
+                  
+                  <!-- first tab content here -->
+                  <div id="one" class="ui-body-d ui-content">
                     <h1>PhoneGap</h1>
                     <div id="deviceready" class="blink">
                         <p class="event listening">Connecting to Device</p>
                         <p class="event received">Device is Ready</p>
                     </div>
-                    <p>I'm first in the source order so I'm shown as the page.</p>
-                    <p>View internal page called <a href="#bar">bar</a></p>
-                </div><!-- /content -->
-
-                <div data-role="footer">
-                    <h4>Page Footer</h4>
-                </div><!-- /footer -->
+                  </div>
+                  
+                  <!-- second tab content here -->
+                  <div id="two" class="ui-content">
+                    <ul data-role="listview" data-inset="true">
+                        <li><a href="#">Acura</a></li>
+                        <li><a href="#">Audi</a></li>
+                        <li><a href="#">BMW</a></li>
+                        <li><a href="#">Cadillac</a></li>
+                        <li><a href="#">Ferrari</a></li>
+                    </ul>
+                  </div>
+                  
+                  <!-- third tab content here -->
+                  <div id="three" class="ui-body-d ui-content">
+                    <h1>Class schedule goes here</h1>
+                  </div>
+                  
+                </div><!--/tabs-->
+                    
             </div><!-- /page -->
-
-            <!-- Start of second page -->
-            <div data-role="page" id="bar">
-
-                <div data-role="header">
-                    <h1>Bar</h1>
-                </div><!-- /header -->
-
-                <div role="main" class="ui-content">
-                    <p>I'm the second in the source order so I'm hidden when the page loads. I'm just shown if a link that references my id is beeing clicked.</p>
-                    <p><a href="#foo">Back to foo</a></p>
-                </div><!-- /content -->
-
-                <div data-role="footer">
-                    <h4>Page Footer</h4>
-                </div><!-- /footer -->
-            </div><!-- /page -->
+            
+            
         </div>
 
         <!-- page-specific js -->
         <script type="text/javascript" src="js/index.js"></script>
-        <!-- Ready.Set.Go. -->
+        <!-- Ready.Set.Go? -->
         <script type="text/javascript">
             app.initialize();
         </script>
