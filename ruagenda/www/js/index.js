@@ -20,6 +20,7 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
+        ldb.initialize();
     },
     // Bind Event Listeners
     //
@@ -45,5 +46,66 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-    }
+    },
 };
+
+var ldb = {
+    
+    initialize: function() {
+        html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024*1024*1024);
+        html5sql.process(
+            [
+                "create table if not exists Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",
+                "insert or ignore into Classes ( cname ) values ( 'none' );",
+                "create table if not exists Assignments ( id INTEGER PRIMARY KEY AUTOINCREMENT, course TEXT NOT NULL REFERENCES Classes(cname) DEFAULT 'none', name TEXT NOT NULL DEFAULT 'Assignment', description TEXT DEFAULT '', dueDate INTEGER, notify INTEGER NOT NULL DEFAULT 0 CHECK(notify == 0 or notify == 1), whenNotify  INTEGER );"
+            ],
+            function() {
+                console.log("Initialized local databse tables");
+            },
+            function(error, statement) {
+                console.log(error);
+                console.log(statement);
+            }
+        );
+        this.makeSampleClasses();
+    },
+    
+    makeSampleClasses: function() {
+        var singleSuccess = function(transaction, results) {
+            console.log(transaction);
+            console.log(results);
+        }
+        html5sql.process(
+            [
+                {
+                    "sql": "Insert into Classes Values (?, ?, ?, ?, ?);",
+                    "data": ["ITEC 315", "GUI class", "Dr. Phillips", "Da 200", "time"],
+                    "success": singleSuccess()
+                },
+                {
+                    "sql": "Insert into Classes Values (?, ?, ?, ?, ?);",
+                    "data": ["ITEC 441", "Database class", "Dr. Phillips", "Da 201", "some other time"],
+                    "success": singleSuccess()
+                },
+                {
+                    "sql": "Insert into Classes Values (?, ?, ?, ?, ?);",
+                    "data": ["MATH 352", "Is this a real class?", "Someone", "Somewhere", "Sometime"],
+                    "success": singleSuccess()
+                },
+                {
+                    "sql": "Insert into Classes Values (?, ?, ?, ?, ?);",
+                    "data": ["ITEC 324", "Principles of Computer Science III", "Hwajung Lee", "Da class", "MWH 10:00-10:50"],
+                    "success": singleSuccess()
+                }                
+            ],
+            function() {
+                console.log("Inserted sample data");
+            },
+            function(error, statement) {
+                console.log(error);
+                console.log(statement);
+            }
+        );
+    }
+    
+}

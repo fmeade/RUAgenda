@@ -28,6 +28,7 @@
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/css/jquery.mobile-1.4.2.min.css \
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/css/jquery.mobile.structure-1.4.2.min.css \
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/img/logo.png \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/js/html5sql.js \
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/js/index.js \
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/js/jquery-1.11.0.min.js \
 /Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/assets/www/js/jquery.mobile-1.4.2.js \
