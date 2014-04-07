@@ -1,9 +1,9 @@
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes.dex : \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/BuildConfig.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$attr.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/RUAgenda.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$string.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$drawable.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$xml.class \
-/home/matthew/git/RUAgenda/ruagenda/platforms/android/bin/dexedLibs/classes-471965d16c661c51d58d9f8b334416f5.jar \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes.dex : \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/BuildConfig.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$attr.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$drawable.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$string.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$xml.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/RUAgenda.class \
+/Users/forrest_meade/Documents/RUAgenda/ruagenda/platforms/android/bin/dexedLibs/classes-0b63202ecd6cd748ac113b77485cea7b.jar \
