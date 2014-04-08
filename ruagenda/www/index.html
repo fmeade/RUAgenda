@@ -39,11 +39,17 @@ It really ought to be more informative than this.  It just isn't -->
                     <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
                 
+<<<<<<< HEAD
                 <div data-role="popup" data-theme="a" id="popup-menu">
                     <ul data-role="listview" data-inset="true">
                         <li><a href="#">Sign In</a></li>
+=======
+                <div data-role="popup" id="popup-menu">
+                    <ul data-role="listview" data-inset="false">
+                        <li><a href="#">Download Schedule</a></li>
+>>>>>>> d92745158bd2c791799bc7b4c8b3bc6b5e385efd
                         <li><a href="#">Reset Everything</a></li>
-                        <li><a href="#">Something</a></li>
+                        <li><a href="#">Something Else</a></li>
                     </ul>
                 </div>
                 
@@ -58,7 +64,7 @@ It really ought to be more informative than this.  It just isn't -->
                     </div>
 
                     <!-- first tab content here -->
-                    <div id="one" class="ui-body-d ui-content">
+                    <div id="one" class="ui-content">
                         <h1>Assignment List By Due Date</h1>
                         <div id="deviceready" class="blink">
                             <p class="event listening">Assignments Loading</p>
@@ -69,18 +75,27 @@ It really ought to be more informative than this.  It just isn't -->
                     <!-- second tab content here -->
                     <div id="two" class="ui-content">
                         <!--data-iconpos="right"-->
+<<<<<<< HEAD
                         <div data-role="collapsible"  data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>Class 1<span class="ui-li-count">2</span></h3>
                             <ul data-role="listview" data-theme="a" data-icon="edit">
+=======
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 120<span class="ui-li-count">2</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+>>>>>>> d92745158bd2c791799bc7b4c8b3bc6b5e385efd
                                 <li><a href="#">Assignment 1
-                                    <p class="ui-li-aside">Due date</p>
+                                    <p class="ui-li-aside">Fri, 4/11</p>
                                 </a></li>
                                 <li><a href="#">Assignment 2
-                                    <p class="ui-li-aside">Due date</p>
+                                    <p class="ui-li-aside">Wed, 4/16</p>
                                 </a></li>
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
                             </ul>
                         </div><!--/collapsible-->
                         
+<<<<<<< HEAD
                         <div data-role="collapsible" data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>Class 2<span class="ui-li-count">0</span></h3>
                             <ul data-role="listview" data-theme="a" data-icon="edit">
@@ -91,15 +106,30 @@ It really ought to be more informative than this.  It just isn't -->
                         <div data-role="collapsible" data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>Class 3<span class="ui-li-count">3</span></h3>
                             <ul data-role="listview" data-theme="a" data-icon="edit">
+=======
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 220<span class="ui-li-count">0</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 320<span class="ui-li-count">3</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+>>>>>>> d92745158bd2c791799bc7b4c8b3bc6b5e385efd
                                 <li><a href="#">Assignment 3
-                                    <p class="ui-li-aside">Due date</p>
+                                    <p class="ui-li-aside">Fri, 5/2</p>
                                 </a></li>
                                 <li><a href="#">Assignment 4
-                                    <p class="ui-li-aside">Due date</p>
+                                    <p class="ui-li-aside">Mon, 4/21</p>
                                 </a></li>
                                 <li><a href="#">Assignment 5
-                                    <p class="ui-li-aside">Due date</p>
+                                    <p class="ui-li-aside">Fri, 4/11</p>
                                 </a></li>
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
                             </ul>
                         </div><!--/collapsible-->
                         
@@ -107,8 +137,26 @@ It really ought to be more informative than this.  It just isn't -->
 
                     <!-- third tab content here -->
                     <div id="three" class="ui-body-d ui-content">
-                        <div id="classList">
-                        </div>
+                        <ul data-role="listview" id="classList" data-icon="edit">
+                            <li><a href="#">ITEC 120
+                                <p><strong>Principles of Computer Science I</strong></p>
+                                <p>Davis 114</p>
+                                <p>Ian Barland</p>
+                                <p>MWF 10:00 am - 10:50 am</p>
+                            </a></li>
+                            <li><a href="#">ITEC 220
+                                <p><strong>Principles of Computer Science II</strong></p>
+                                <p>Davis 221</p>
+                                <p>Joe Chase</p>
+                                <p>MW 9:00am - 9:50am, TH 10:00am -10:50am</p>
+                            </a></li>
+                            <li><a href="#">ITEC 324
+                                <p><strong>Principles of Computer Science III</strong></p>
+                                <p>Davis 214</p>
+                                <p>Hwajun Lee</p>
+                                <p>MWF 11:00 am - 11:50 am</p>
+                            </a></li>
+                        </ul>
                     </div><!--/three-->
 
                 </div><!--/tabs-->
