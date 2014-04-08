@@ -24,33 +24,21 @@ It really ought to be more informative than this.  It just isn't -->
         <!-- jQuery Mobile -->
         <script type="text/javascript" src="js/jquery.mobile-1.4.2.js"></script>
         
-<<<<<<< HEAD
-        
-=======
-        <link rel="stylesheet" href="themes/RUAgendaTheme.min.css" />
-		<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile.structure-1.4.2.min.css" />
-		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
->>>>>>> 032d716f2f3d93be27ce0166447ddc05cfc3845d
 
         <title>Home</title>
     </head>
     <body>
         <div class="app"><!-- phonegap put this outermost div here -->
             <!-- Start of the main page -->
-            <div data-role="page" data-theme="a"id="main">
+            <div data-role="page" id="main">
 
-                <div data-role="header" data-theme="a">
+                <div data-role="header">
                     <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
                     <h1>RU Agenda</h1>
                     <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline 
                      ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
                 
-                <div data-role="popup" data-theme="a" id="popup-menu">
-                    <ul data-role="listview" data-inset="true">
-                        <li><a href="#">Sign In</a></li>
                 <div data-role="popup" id="popup-menu">
                     <ul data-role="listview" data-inset="false">
                         <li><a href="#">Download Schedule</a></li>
@@ -59,9 +47,9 @@ It really ought to be more informative than this.  It just isn't -->
                     </ul>
                 </div>
                 
-                <div data-role="tabs" data-theme="a" id="tabs">
+                <div data-role="tabs" id="tabs">
 
-                    <div data-role="navbar" data-theme="a">
+                    <div data-role="navbar">
                         <ul>
                             <li><a href="#one" data-ajax="false" class="ui-btn-active">By Due Date</a></li>
                             <li><a href="#two" data-ajax="false">By Class</a></li>
@@ -81,9 +69,7 @@ It really ought to be more informative than this.  It just isn't -->
                     <!-- second tab content here -->
                     <div id="two" class="ui-content">
                         <!--data-iconpos="right"-->
-                        <div data-role="collapsible"  data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
-                            <h3>Class 1<span class="ui-li-count">2</span></h3>
-                            <ul data-role="listview" data-theme="a" data-icon="edit">
+                        
                         <div data-role="collapsible" data-inset="false"
                             data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>ITEC 120<span class="ui-li-count">2</span></h3>
@@ -98,16 +84,6 @@ It really ought to be more informative than this.  It just isn't -->
                             </ul>
                         </div><!--/collapsible-->
                         
-                        <div data-role="collapsible" data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
-                            <h3>Class 2<span class="ui-li-count">0</span></h3>
-                            <ul data-role="listview" data-theme="a" data-icon="edit">
-                                
-                            </ul>
-                        </div><!--/collapsible-->
-                        
-                        <div data-role="collapsible" data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
-                            <h3>Class 3<span class="ui-li-count">3</span></h3>
-                            <ul data-role="listview" data-theme="a" data-icon="edit">
                         <div data-role="collapsible" data-inset="false"
                             data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>ITEC 220<span class="ui-li-count">0</span></h3>
@@ -115,6 +91,7 @@ It really ought to be more informative than this.  It just isn't -->
                                 <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
                             </ul>
                         </div><!--/collapsible-->
+                        
                         
                         <div data-role="collapsible" data-inset="false"
                             data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
