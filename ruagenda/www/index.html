@@ -30,9 +30,17 @@ It really ought to be more informative than this.  It just isn't -->
                 <div data-role="header">
                     <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
                     <h1>RU Agenda</h1>
-                    <a href="#" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
+                    <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
-
+                
+                <div data-role="popup" id="popup-menu">
+                    <ul data-role="listview" data-inset="true">
+                        <li><a href="#">Sign In</a></li>
+                        <li><a href="#">Reset Everything</a></li>
+                        <li><a href="#">Something</a></li>
+                    </ul>
+                </div>
+                
                 <div data-role="tabs" id="tabs">
 
                     <div data-role="navbar">
@@ -54,14 +62,42 @@ It really ought to be more informative than this.  It just isn't -->
 
                     <!-- second tab content here -->
                     <div id="two" class="ui-content">
-                        <ul data-role="listview" data-inset="true">
-                            <li><a href="#">Class 1</a></li>
-                            <li><a href="#">Class 2</a></li>
-                            <li><a href="#">Class 3</a></li>
-                            <li><a href="#">Class 4</a></li>
-                            <li><a href="#">Class 5</a></li>
-                        </ul>
-                    </div>
+                        <!--data-iconpos="right"-->
+                        <div data-role="collapsible"  data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>Class 1<span class="ui-li-count">2</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="#">Assignment 1
+                                    <p class="ui-li-aside">Due date</p>
+                                </a></li>
+                                <li><a href="#">Assignment 2
+                                    <p class="ui-li-aside">Due date</p>
+                                </a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                        <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>Class 2<span class="ui-li-count">0</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                        <div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>Class 3<span class="ui-li-count">3</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="#">Assignment 3
+                                    <p class="ui-li-aside">Due date</p>
+                                </a></li>
+                                <li><a href="#">Assignment 4
+                                    <p class="ui-li-aside">Due date</p>
+                                </a></li>
+                                <li><a href="#">Assignment 5
+                                    <p class="ui-li-aside">Due date</p>
+                                </a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                    </div><!--/tab two->
 
                     <!-- third tab content here -->
                     <div id="three" class="ui-body-d ui-content">
