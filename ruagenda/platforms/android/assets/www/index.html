@@ -30,9 +30,17 @@ It really ought to be more informative than this.  It just isn't -->
                 <div data-role="header">
                     <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
                     <h1>RU Agenda</h1>
-                    <a href="#" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
+                    <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
-
+                
+                <div data-role="popup" id="popup-menu">
+                    <ul data-role="listview" data-inset="false">
+                        <li><a href="#">Download Schedule</a></li>
+                        <li><a href="#">Reset Everything</a></li>
+                        <li><a href="#">Something Else</a></li>
+                    </ul>
+                </div>
+                
                 <div data-role="tabs" id="tabs">
 
                     <div data-role="navbar">
@@ -44,7 +52,7 @@ It really ought to be more informative than this.  It just isn't -->
                     </div>
 
                     <!-- first tab content here -->
-                    <div id="one" class="ui-body-d ui-content">
+                    <div id="one" class="ui-content">
                         <h1>Assignment List By Due Date</h1>
                         <div id="deviceready" class="blink">
                             <p class="event listening">Assignments Loading</p>
@@ -54,19 +62,70 @@ It really ought to be more informative than this.  It just isn't -->
 
                     <!-- second tab content here -->
                     <div id="two" class="ui-content">
-                        <ul data-role="listview" data-inset="true">
-                            <li><a href="#">Class 1</a></li>
-                            <li><a href="#">Class 2</a></li>
-                            <li><a href="#">Class 3</a></li>
-                            <li><a href="#">Class 4</a></li>
-                            <li><a href="#">Class 5</a></li>
-                        </ul>
-                    </div>
+                        <!--data-iconpos="right"-->
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 120<span class="ui-li-count">2</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="#">Assignment 1
+                                    <p class="ui-li-aside">Fri, 4/11</p>
+                                </a></li>
+                                <li><a href="#">Assignment 2
+                                    <p class="ui-li-aside">Wed, 4/16</p>
+                                </a></li>
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 220<span class="ui-li-count">0</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                        <div data-role="collapsible" data-inset="false"
+                            data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                            <h3>ITEC 320<span class="ui-li-count">3</span></h3>
+                            <ul data-role="listview" data-icon="edit">
+                                <li><a href="#">Assignment 3
+                                    <p class="ui-li-aside">Fri, 5/2</p>
+                                </a></li>
+                                <li><a href="#">Assignment 4
+                                    <p class="ui-li-aside">Mon, 4/21</p>
+                                </a></li>
+                                <li><a href="#">Assignment 5
+                                    <p class="ui-li-aside">Fri, 4/11</p>
+                                </a></li>
+                                <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
+                            </ul>
+                        </div><!--/collapsible-->
+                        
+                    </div><!--/tab two->
 
                     <!-- third tab content here -->
                     <div id="three" class="ui-body-d ui-content">
-                        <div id="classList">
-                        </div>
+                        <ul data-role="listview" id="classList" data-icon="edit">
+                            <li><a href="#">ITEC 120
+                                <p><strong>Principles of Computer Science I</strong></p>
+                                <p>Davis 114</p>
+                                <p>Ian Barland</p>
+                                <p>MWF 10:00 am - 10:50 am</p>
+                            </a></li>
+                            <li><a href="#">ITEC 220
+                                <p><strong>Principles of Computer Science II</strong></p>
+                                <p>Davis 221</p>
+                                <p>Joe Chase</p>
+                                <p>MW 9:00am - 9:50am, TH 10:00am -10:50am</p>
+                            </a></li>
+                            <li><a href="#">ITEC 324
+                                <p><strong>Principles of Computer Science III</strong></p>
+                                <p>Davis 214</p>
+                                <p>Hwajun Lee</p>
+                                <p>MWF 11:00 am - 11:50 am</p>
+                            </a></li>
+                        </ul>
                     </div><!--/three-->
 
                 </div><!--/tabs-->
