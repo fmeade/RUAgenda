@@ -6,4 +6,7 @@
 /home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/RUAgenda.class \
 /home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$xml.class \
 /home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/edu/radford/agenda/R$attr.class \
+/home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/org/pgsqlite/SQLitePlugin$1.class \
+/home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/org/pgsqlite/SQLitePlugin.class \
+/home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/classes/org/pgsqlite/SQLitePlugin$2.class \
 /home/hyrax/git/RUAgenda/ruagenda/platforms/android/bin/dexedLibs/classes-2955d2446c60843bca0b3983e1bdfac0.jar \

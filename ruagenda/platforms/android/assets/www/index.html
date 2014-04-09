@@ -11,14 +11,19 @@ It really ought to be more informative than this.  It just isn't -->
         
         <!-- jQuery css - if/when we use themeroller, replace this
         with the structure and icon css and add the theme after -->
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
+        <!--<link rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" /> -->
+        
+        <link rel="stylesheet" href="themes/RUAgendaTheme.min.css" />
+		<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile.structure-1.4.2.min.css" />
         
         <!-- phonegap/cordova js -->
-        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
         <!-- jQeury base -->
         <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
         <!-- jQuery Mobile -->
         <script type="text/javascript" src="js/jquery.mobile-1.4.2.js"></script>
+        
 
         <title>Home</title>
     </head>
@@ -30,7 +35,8 @@ It really ought to be more informative than this.  It just isn't -->
                 <div data-role="header">
                     <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
                     <h1>RU Agenda</h1>
-                    <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
+                    <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline 
+                     ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
                 </div><!-- /header -->
                 
                 <div data-role="popup" id="popup-menu">
@@ -53,16 +59,13 @@ It really ought to be more informative than this.  It just isn't -->
 
                     <!-- first tab content here -->
                     <div id="one" class="ui-content">
-                        <h1>Assignment List By Due Date</h1>
-                        <div id="deviceready" class="blink">
-                            <p class="event listening">Assignments Loading</p>
-                            <p class="event received">Assignments</p>
-                        </div>
+                        <h2>Assignment List By Due Date</h2>
                     </div>
 
                     <!-- second tab content here -->
                     <div id="two" class="ui-content">
                         <!--data-iconpos="right"-->
+                        
                         <div data-role="collapsible" data-inset="false"
                             data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                             <h3>ITEC 120<span class="ui-li-count">2</span></h3>
@@ -84,6 +87,7 @@ It really ought to be more informative than this.  It just isn't -->
                                 <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
                             </ul>
                         </div><!--/collapsible-->
+                        
                         
                         <div data-role="collapsible" data-inset="false"
                             data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
@@ -107,24 +111,7 @@ It really ought to be more informative than this.  It just isn't -->
                     <!-- third tab content here -->
                     <div id="three" class="ui-body-d ui-content">
                         <ul data-role="listview" id="classList" data-icon="edit">
-                            <li><a href="#">ITEC 120
-                                <p><strong>Principles of Computer Science I</strong></p>
-                                <p>Davis 114</p>
-                                <p>Ian Barland</p>
-                                <p>MWF 10:00 am - 10:50 am</p>
-                            </a></li>
-                            <li><a href="#">ITEC 220
-                                <p><strong>Principles of Computer Science II</strong></p>
-                                <p>Davis 221</p>
-                                <p>Joe Chase</p>
-                                <p>MW 9:00am - 9:50am, TH 10:00am -10:50am</p>
-                            </a></li>
-                            <li><a href="#">ITEC 324
-                                <p><strong>Principles of Computer Science III</strong></p>
-                                <p>Davis 214</p>
-                                <p>Hwajun Lee</p>
-                                <p>MWF 11:00 am - 11:50 am</p>
-                            </a></li>
+                            <!-- data-generated.  yay! -->
                         </ul>
                     </div><!--/three-->
 
