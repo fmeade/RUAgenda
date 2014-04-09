@@ -1,27 +1,11 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * TODO: migrate databse functionality to 'com.phonegap.plugins.sqlite'
+ * > https://github.com/brodysoft/Cordova-SQLitePlugin
  */
- 
 var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-        
     },
     // Bind Event Listeners
     //
@@ -31,7 +15,7 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     // deviceready Event Handler
-    //
+    // >> the phonegap api is not ready until this method is called!
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
@@ -39,10 +23,13 @@ var app = {
         app.initiateClassListUpdate();
     },
     
+    /* begins updating the classlist view from the database */
     initiateClassListUpdate: function() {
         ldb.getClassList();
     },
-    
+    /* finishes updating the class list view using objects queried from db
+     * called from websql 'success' callback function
+     */
     completeClassListUpdate: function(classList) {
         $listDom = $( "#classList" );
         $listDom.empty();
@@ -51,7 +38,7 @@ var app = {
         });
         $listDom.listview('refresh');
     },
-    
+    /* Creates html for a single class section list item using a class section object */
     generateClassListItem: function(cls) {
         return "<li><a href='#'>" + cls.name + "<p><strong>" + cls.title + "</strong></p> \
                 <p>" + cls.instructor + "</p><p>" + cls.location + "</p> \
@@ -78,7 +65,7 @@ var ldb = {
     
     /** Initializes the database tables */
     initialize: function() {
-        html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024*1024*1024);
+        html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024*1024*5);
         html5sql.process(
             [
                 "create table if not exists Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",

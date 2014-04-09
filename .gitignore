@@ -1,5 +1,8 @@
 # ANDROID / ECLIPSE
 
+ruagenda/platforms/android/assets/**
+ruagenda/platforms/android/bin/**
+ruagenda/platforms/android/gen/**
 # built application files
 *.apk
 *.ap_
@@ -11,9 +14,9 @@
 *.class
 
 # generated files - android project subfolder
-android/bin/
-android/gen/
-android/assets/
+android/bin/**
+android/gen/**
+android/assets/**
 
 # generated files
 bin/
