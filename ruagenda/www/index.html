@@ -33,10 +33,11 @@ It really ought to be more informative than this.  It just isn't -->
         <div data-role="page" id="main">
 
             <div data-role="header">
-                <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-left">Back</a>
+                <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l 
+                    ui-btn-icon-left ui-corner-all" data-rel="back">Back</a>
                 <h1>RU Agenda</h1>
                 <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline 
-                 ui-icon-gear ui-btn-icon-notext">Settings Maybe</a>
+                    ui-icon-gear ui-btn-icon-notext ui-corner-all">Settings Maybe</a>
             </div><!-- /header -->
             
             <div data-role="popup" id="popup-menu">
@@ -59,13 +60,47 @@ It really ought to be more informative than this.  It just isn't -->
 
                 <!-- first tab content here -->
                 <div id="one" class="ui-content">
-                    <h2>Assignment List By Due Date</h2>
+                    
+                    <ul data-role="listview" data-icon="edit" data-filter="true" 
+                        data-filter-placeholder="Filter assignments..." >
+                        <li><a href="#">Assignment 1
+                            <p>This is a description ipsum lorem test text<br />
+                            (No notification)</p>
+                            <p class="ui-li-aside">ITEC 120<br />
+                            Due Friday, 4/11</p>
+                        </a></li>
+                        <li><a href="#">Assignment 5
+                            <p>This is a description ipsum lorem test text<br />
+                            Notify: 1 day before</p>
+                            <p class="ui-li-aside">ITEC 320<br />
+                            Due Friday, 4/11</p>
+                        </a></li>
+                        <li><a href="#">Assignment 2
+                            <p>This is a description ipsum lorem test text<br />
+                            Notify: 6 hours before</p>
+                            <p class="ui-li-aside">ITEC 120<br />
+                            Due Wednesday, 4/16</p>
+                        </a></li>
+                        <li><a href="#">Assignment 4
+                            <p>This is a description ipsum lorem test text<br />
+                            (No notification)</p>
+                            <p class="ui-li-aside">ITEC 320<br />
+                            Due Monday, 4/21</p>
+                        </a></li>
+                        <li><a href="#">Assignment 3
+                            <p>This is a description ipsum lorem test text<br />
+                            Notify: 1 week before</p>
+                            <p class="ui-li-aside">ITEC 320<br />
+                            Due Friday, 5/2</p>
+                        </a></li>
+                    </ul>
+                    
                 </div>
 
                 <!-- second tab content here -->
                 <div id="two" class="ui-content">
-                    <!--data-iconpos="right"-->
-                    
+
+                    <!-- TODO: Inset inner list view -->
                     <div data-role="collapsible" data-inset="false"
                         data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                         <h3>ITEC 120<span class="ui-li-count">2</span></h3>
