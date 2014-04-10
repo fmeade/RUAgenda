@@ -22,7 +22,6 @@ var app = {
         ldb.initialize();
         app.initiateClassListUpdate();
     },
-    
     /* begins updating the classlist view from the database */
     initiateClassListUpdate: function() {
         ldb.getClassList();

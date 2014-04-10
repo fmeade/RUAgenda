@@ -41,9 +41,9 @@ It really ought to be more informative than this.  It just isn't -->
             </div><!-- /header -->
             
             <!-- top right menu -->
-            <div data-role="popup" id="popup-menu">
+            <div data-role="popup" id="popup-menu" class="popupParent">
                 <ul data-role="listview" data-inset="false">
-                    <li><a href="#sign-in" data-rel="popup" data-position-to="window">Download Schedule</a></li>
+                    <li><a href='#'>Download Schedule</a></li>
                     <li><a href="#">Reset Everything</a></li>
                     <li><a href="#">Something Else</a></li>
                 </ul>
@@ -86,7 +86,7 @@ It really ought to be more informative than this.  It just isn't -->
             </div>
             
             <!-- sign-in form -->
-            <div data-role="popup" id="sign-in" class="ui-content" data-overlay-theme="b">
+            <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
                 <form>
                     <h3>Please sign in</h3>
                     <label for="un" class="ui-hidden-accessible">Username:</label>
@@ -112,7 +112,7 @@ It really ought to be more informative than this.  It just isn't -->
                     
                     <ul data-role="listview" data-icon="edit" data-filter="true" 
                         data-filter-placeholder="Filter assignments..." >
-                        <li><a href="#">Midterm
+                        <li><a href="#sign-in" data-rel="popup" data-position-to="window">Midterm
                             <p>Midterm Exam on ch. 1-4<br />
                             (No notification)</p>
                             <p class="ui-li-aside">ART 111<br />
