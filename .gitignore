@@ -14,9 +14,9 @@ ruagenda/platforms/android/gen/**
 *.class
 
 # generated files - android project subfolder
-android/bin/**
-android/gen/**
-android/assets/**
+bin/**
+gen/**
+assets/**
 
 # generated files
 bin/
