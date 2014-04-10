@@ -51,12 +51,38 @@ It really ought to be more informative than this.  It just isn't -->
             
             <!-- detail view popup for one assignment -->
             <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="b">
-                Hi!
+                <form>
+		    <h3>Edit Assignment</h3>
+		    <label for="name" class="ui-accessible">Assignment Name:</label>
+		    <input type="text" name="assignment" id="an" value="Test 1">
+		    <label for="description" class="ui-accessible">Description:</label>
+		    <input type="text" name="description" id="des" value="Test on ch. 1-3">
+		    <label for="class" class="ui-accessible">Class:</label>
+		    <input type="text" name="class" id="class" value="ITEC 110">
+		    <label for="due" class="ui-accessible">Due Date:</label>
+		    <input type="text" name="duedate" id="due" value="Friday, 4/11">
+		    <label for="notify" class="ui-accessible">Notify Me:</label>
+		    <input type="text" name="notify" id="notify" value="1 day before">
+
+		</form>
             </div>
             
             <!-- edit view popup for one assignment -->
             <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="b">
-                Hello!
+                <form>
+		    <h3>Add Assignment</h3>
+		    <label for="name" class="ui-accessible">Assignment Name:</label>
+		    <input type="text" name="assignment" id="an" value="Name of the Assignment">
+		    <label for="description" class="ui-accessible">Description:</label>
+		    <input type="text" name="description" id="des" value="Description of assignment">
+		    <label for="class" class="ui-accessible">Class:</label>
+		    <input type="text" name="class" id="class" value="What class?"> 
+		    <label for="due" class="ui-accessible">Due Date:</label>
+		    <input type="text" name="duedate" id="due" value="When is it due?">
+		    <label for="notify" class="ui-accessible">Notify Me:</label>
+		    <input type="text" name="notify" id="notify" value="notify me when it's..">
+
+		</form>
             </div>
             
             <!-- sign-in form -->
