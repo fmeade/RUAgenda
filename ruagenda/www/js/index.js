@@ -36,6 +36,10 @@ var app = {
             $listDom.append( app.generateClassListItem( cls ) );
         });
         $listDom.listview('refresh');
+        // bind handlers maybe
+        $("#classList li a").on("click", function() {
+            $("#class-edit").popup("open");
+        });
     },
     /* Creates html for a single class section list item using a class section object */
     generateClassListItem: function(cls) {
