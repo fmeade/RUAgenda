@@ -1,8 +1,5 @@
 # ANDROID / ECLIPSE
 
-ruagenda/platforms/android/assets/**
-ruagenda/platforms/android/bin/**
-ruagenda/platforms/android/gen/**
 # built application files
 *.apk
 *.ap_
@@ -14,9 +11,9 @@ ruagenda/platforms/android/gen/**
 *.class
 
 # generated files - android project subfolder
-bin/**
-gen/**
-assets/**
+ruagenda/platforms/android/bin/**
+ruagenda/platforms/android/gen/**
+ruagenda/platforms/android/assets/**
 
 # generated files
 bin/
@@ -24,23 +21,6 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
-
-# IOS / Xcode
-build/*
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-*.xcworkspace
-!default.xcworkspace
-xcuserdata
-profile
-*.moved-aside
-IOS/www/
 
 # OSX
 .DS_Store
