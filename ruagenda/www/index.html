@@ -33,19 +33,42 @@ It really ought to be more informative than this.  It just isn't -->
         <div data-role="page" id="main">
 
             <div data-role="header">
-                <a href="#" class="ui-btn ui-btn-inline ui-icon-arrow-l 
-                    ui-btn-icon-left ui-corner-all" data-rel="back">Back</a>
+                <a href="#dbg-menu" data-rel="popup" class="ui-btn ui-btn-inline 
+                    ui-icon-info ui-corner-all ui-btn-icon-notext">dbg</a>
                 <h1>RU Agenda</h1>
                 <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline 
                     ui-icon-gear ui-btn-icon-notext ui-corner-all">Settings Maybe</a>
             </div><!-- /header -->
             
+            <!-- top right menu -->
             <div data-role="popup" id="popup-menu">
                 <ul data-role="listview" data-inset="false">
-                    <li><a href="#">Download Schedule</a></li>
+                    <li><a href="#sign-in" data-rel="popup" data-position-to="window">Download Schedule</a></li>
                     <li><a href="#">Reset Everything</a></li>
                     <li><a href="#">Something Else</a></li>
                 </ul>
+            </div>
+            
+            <!-- detail view popup for one assignment -->
+            <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="b">
+                Hi!
+            </div>
+            
+            <!-- edit view popup for one assignment -->
+            <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="b">
+                Hello!
+            </div>
+            
+            <!-- sign-in form -->
+            <div data-role="popup" id="sign-in" class="ui-content" data-overlay-theme="b">
+                <form>
+                    <h3>Please sign in</h3>
+                    <label for="un" class="ui-hidden-accessible">Username:</label>
+                    <input type="text" name="user" id="un" value="" placeholder="username">
+                    <label for="pw" class="ui-hidden-accessible">Password:</label>
+                    <input type="password" name="pass" id="pw" value="" placeholder="password">
+                    <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-check">Sign In</button>
+                </form>
             </div>
             
             <div data-role="tabs" id="tabs">
@@ -64,8 +87,9 @@ It really ought to be more informative than this.  It just isn't -->
                     <ul data-role="listview" data-icon="edit" data-filter="true" 
                         data-filter-placeholder="Filter assignments..." >
                         <li><a href="#">Assignment 1
-                            <p>This is a description ipsum lorem test text<br />
-                            (No notification)</p>
+                            <p>This is a description ipsum lorem test text
+                            <br />(No notification)
+                            </p>
                             <p class="ui-li-aside">ITEC 120<br />
                             Due Friday, 4/11</p>
                         </a></li>
@@ -105,13 +129,13 @@ It really ought to be more informative than this.  It just isn't -->
                         data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                         <h3>ITEC 120<span class="ui-li-count">2</span></h3>
                         <ul data-role="listview" data-icon="edit">
-                            <li><a href="#">Assignment 1
+                            <li><a <a href="#task-detail" data-rel="popup" data-position-to="window">Assignment 1
                                 <p class="ui-li-aside">Fri, 4/11</p>
                             </a></li>
                             <li><a href="#">Assignment 2
                                 <p class="ui-li-aside">Wed, 4/16</p>
                             </a></li>
-                            <li><a href="" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
+                            <li><a href="#task-edit" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
                         </ul>
                     </div><!--/collapsible-->
                     
