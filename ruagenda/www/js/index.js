@@ -68,6 +68,7 @@ var ldb = {
         html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024*1024*5);
         html5sql.process(
             [
+		"drop table Classes;","drop table Assignments",
                 "create table if not exists Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",
                 "insert or ignore into Classes ( cname ) values ( 'none' );",
                 "create table if not exists Assignments ( id INTEGER PRIMARY KEY AUTOINCREMENT, course TEXT NOT NULL REFERENCES Classes(cname) DEFAULT 'none', name TEXT NOT NULL DEFAULT 'Assignment', description TEXT DEFAULT '', dueDate INTEGER, notify INTEGER NOT NULL DEFAULT 0 CHECK(notify == 0 or notify == 1), whenNotify  INTEGER );"
@@ -127,22 +128,22 @@ var ldb = {
             [
                 {
                     "sql": "Insert or replace into Classes Values (?, ?, ?, ?, ?);",
-                    "data": ["ITEC 315", "GUI class", "Dr. Phillips", "Da 200", "time"],
+                    "data": ["ITEC 110", "Principles of Information Technology", "Dr. Htay", "MG 203", "TR 3:30 - 4:45 PM"],
                     "success": singleSuccess()
                 },
                 {
                     "sql": "Insert or replace into Classes Values (?, ?, ?, ?, ?);",
-                    "data": ["ITEC 441", "Database class", "Dr. Phillips", "Da 201", "some other time"],
+                    "data": ["ITEC 120", "Principles of Computer Science I", "Dr. Braffitt", "DA 225", "MWRF 11 - 11:50 AM"],
                     "success": singleSuccess()
                 },
                 {
                     "sql": "Insert or replace into Classes Values (?, ?, ?, ?, ?);",
-                    "data": ["MATH 352", "Is this a real class?", "Someone", "Somewhere", "Sometime"],
+                    "data": ["MATH 151", "Calculus I", "Cabbage", "RU 314", "MWF 1 - 1:50 PM"],
                     "success": singleSuccess()
                 },
                 {
                     "sql": "Insert or replace into Classes Values (?, ?, ?, ?, ?);",
-                    "data": ["ITEC 324", "Principles of Computer Science III", "Hwajung Lee", "Da class", "MWH 10:00-10:50"],
+                    "data": ["ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM"],
                     "success": singleSuccess()
                 }                
             ],
