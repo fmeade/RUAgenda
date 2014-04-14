@@ -50,7 +50,7 @@ It really ought to be more informative than this.  It just isn't -->
             </div>
             
             <!-- detail view popup for one assignment -->
-            <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="b">
+            <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="a">
                 <form>
                     <h3>Edit Assignment</h3>
                     <label for="name" class="ui-accessible">Assignment Name:</label>
@@ -66,8 +66,8 @@ It really ought to be more informative than this.  It just isn't -->
                 </form>
             </div>
             
-            <!-- edit view popup for one assignment -->
-            <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="b">
+            <!-- popup for new assignment -->
+            <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="a">
                 <form>
                     <h3>Add Assignment</h3>
                     <label for="name" class="ui-accessible">Assignment Name:</label>
@@ -83,27 +83,52 @@ It really ought to be more informative than this.  It just isn't -->
                 </form>
             </div>
             
-            <div data-role="popup" id="class-edit" class="ui-content" data-overlay-theme="a">
-                
-            </div>
-           
-	    
-            <div data-role="popup" id="class-edit" class="ui-content" data-overlay-theme="b">
+            <!-- popup for editing class -->
+            <div data-role="popup" id="edit-class" class="ui-content" data-overlay-theme="a">
                 <form>
-		    <h3>Edit Class</h3>
-		    <label for="id" class="ui-accessible">Class ID:</label>
-		    <input type="text" name="id" id="id" value="ITEC 110">
-		    <label for="name" class="ui-accessible">Class Name:</label>
-		    <input type="text" name="name" id="name" value="Principles of Information Technology">
-		    <label for="Professor" class="ui-accessible">Professor:</label>
-		    <input type="text" name="professor" id="prof" value="Dr. Htay"> 
-		    <label for="meeting" class="ui-accessible">Meeting Time:</label>
-		    <input type="text" name="meeting" id="meet" value="TR 3:30 - 4:45 PM">
-		    <label for="location" class="ui-accessible">Location:</label>
-		    <input type="text" name="location" id="location" value="MG 203">
-
-		</form>
+                    <h3>Edit Class</h3>
+                    <label for="id" class="ui-accessible">Class ID:</label>
+                    <input type="text" name="id" id="id" value="ITEC 110">
+                    <label for="name" class="ui-accessible">Class Name:</label>
+                    <input type="text" name="name" id="name" value="Principles of Information Technology">
+                    <label for="Professor" class="ui-accessible">Professor:</label>
+                    <input type="text" name="professor" id="prof" value="Dr. Htay"> 
+                    <label for="meeting" class="ui-accessible">Meeting Time:</label>
+                    <input type="text" name="meeting" id="meet" value="TR 3:30 - 4:45 PM">
+                    <label for="location" class="ui-accessible">Location:</label>
+                    <input type="text" name="location" id="location" value="MG 203">
+                </form>
             </div>
+            
+            <!-- new class popup
+            (Does not need to be dynamic, so we can genuinely hardcode it) -->
+            <div data-role="popup" id="new-class" class="ui-content" data-overlay-theme="a">
+                <form><fieldset>
+                    <legend>Add a new class</legend>                
+                    <label for="new-class-id" class="ui-hidden-accessible">Class name</label>
+                    <input type="text" name="new-class-id" id="new-class-id" 
+                        placeholder="Class id (ex: ITEC 120)" value="" />
+                    
+                    <label for="new-class-title" class="ui-hidden-accessible">Class title</label>
+                    <input type="text" name="new-class-title" id="new-class-title" 
+                        placeholder="Class title (ex: Geology...)" value="" />
+                    
+                    <label for="new-class-who" class="ui-hidden-accessible">Professor</label>
+                    <input type="text" name="new-class-who" id="new-class-who" 
+                        placeholder="Instructor/Professor" value="" />
+                    
+                    <label for="new-class-when" class="ui-hidden-accessible">Meeting times</label>
+                    <input type="text" name="new-class-when" id="new-class-when" 
+                        placeholder="Meeting times" value="" />
+                    
+                    <label for="new-class-where" class="ui-hidden-accessible">Class name</label>
+                    <input type="text" name="new-class-where" id="new-class-where" 
+                        placeholder="Location" value="" />
+                    
+                    <a href="#" id="new-class-cancel" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-back">Cancel</a>
+                    <a href="#" id="new-class-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
+                </fieldset></form>
+            </div> <!--/new-class popup-->
  
             <!-- sign-in form -->
             <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
@@ -207,6 +232,7 @@ It really ought to be more informative than this.  It just isn't -->
                 <div id="three" class="ui-body-d ui-content">
                     <ul data-role="listview" id="classList" data-icon="edit">
                         <!-- data-generated.  yay! -->
+                        <li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>
                     </ul>
                 </div><!--/three-->
 
