@@ -83,52 +83,36 @@ It really ought to be more informative than this.  It just isn't -->
                 </form>
             </div>
             
-            <!-- popup for editing class -->
+            <!-- class detail popup (new OR edit)
+            (Mostly does not need to be dynamic, so we can genuinely hardcode it) -->
             <div data-role="popup" id="edit-class" class="ui-content" data-overlay-theme="a">
-                <form>
-                    <h3>Edit Class</h3>
-                    <label for="id" class="ui-accessible">Class ID:</label>
-                    <input type="text" name="id" id="id" value="ITEC 110">
-                    <label for="name" class="ui-accessible">Class Name:</label>
-                    <input type="text" name="name" id="name" value="Principles of Information Technology">
-                    <label for="Professor" class="ui-accessible">Professor:</label>
-                    <input type="text" name="professor" id="prof" value="Dr. Htay"> 
-                    <label for="meeting" class="ui-accessible">Meeting Time:</label>
-                    <input type="text" name="meeting" id="meet" value="TR 3:30 - 4:45 PM">
-                    <label for="location" class="ui-accessible">Location:</label>
-                    <input type="text" name="location" id="location" value="MG 203">
-                </form>
-            </div>
-            
-            <!-- new class popup
-            (Does not need to be dynamic, so we can genuinely hardcode it) -->
-            <div data-role="popup" id="new-class" class="ui-content" data-overlay-theme="a">
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-back ui-btn-icon-notext ui-btn-right">Close</a>
                 <form><fieldset>
                     <legend>Add a new class</legend>                
-                    <label for="new-class-id" class="ui-hidden-accessible">Class name</label>
-                    <input type="text" name="new-class-id" id="new-class-id" 
+                    <label for="edit-class-id" class="ui-hidden-accessible">Class name</label>
+                    <input type="text" name="edit-class-id" id="edit-class-id" 
                         placeholder="Class id (ex: ITEC 120)" value="" />
                     
-                    <label for="new-class-title" class="ui-hidden-accessible">Class title</label>
-                    <input type="text" name="new-class-title" id="new-class-title" 
+                    <label for="edit-class-title" class="ui-hidden-accessible">Class title</label>
+                    <input type="text" name="edit-class-title" id="edit-class-title" 
                         placeholder="Class title (ex: Geology...)" value="" />
                     
-                    <label for="new-class-who" class="ui-hidden-accessible">Professor</label>
-                    <input type="text" name="new-class-who" id="new-class-who" 
+                    <label for="edit-class-who" class="ui-hidden-accessible">Professor</label>
+                    <input type="text" name="edit-class-who" id="edit-class-who" 
                         placeholder="Instructor/Professor" value="" />
                     
-                    <label for="new-class-when" class="ui-hidden-accessible">Meeting times</label>
-                    <input type="text" name="new-class-when" id="new-class-when" 
+                    <label for="edit-class-when" class="ui-hidden-accessible">Meeting times</label>
+                    <input type="text" name="edit-class-when" id="edit-class-when" 
                         placeholder="Meeting times" value="" />
                     
-                    <label for="new-class-where" class="ui-hidden-accessible">Class name</label>
-                    <input type="text" name="new-class-where" id="new-class-where" 
+                    <label for="edit-class-where" class="ui-hidden-accessible">Class name</label>
+                    <input type="text" name="edit-class-where" id="edit-class-where" 
                         placeholder="Location" value="" />
                     
-                    <a href="#" id="new-class-cancel" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-back">Cancel</a>
-                    <a href="#" id="new-class-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
+                    <a href="#" id="edit-class-delete" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-delete">Delete</a>
+                    <a href="#" id="edit-class-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
                 </fieldset></form>
-            </div> <!--/new-class popup-->
+            </div> <!--/edit-class popup-->
  
             <!-- sign-in form -->
             <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
