@@ -32,7 +32,6 @@
          */
         bindEvents: function () {
             document.addEventListener('deviceready', this.onDeviceReady, false);
-            
             $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
             $("#edit-class-save").on("click", this.classPopupSaveHandler);
@@ -67,7 +66,7 @@
             app.classList.populateClassList();
         },
         /* handler when we tapclick the "Add new class" list item */
-        addNewClassHandler: function (event) {
+        addNewClassHandler: function (/* event */) {
             // hide the delete/remove button
             $("#edit-class-delete").hide();
             // enable the class title field
@@ -79,6 +78,7 @@
         },
         /* handler when we tapclick an existing item in the list of classes */
         editClassHandler: function (event) {
+            var lid, cls;
             // show the delete/remove button
             $("#edit-class-delete").show();
             // disable editing the name/id of the class (it's the key)
@@ -86,8 +86,8 @@
             // set the 'legend' text
             $("div#edit-class h3").text("Edit class details");
             // need to pre-populate the form w/ values
-            var lid = event.currentTarget.id;
-            var cls = app.classList.getClassById(lid);
+            lid = event.currentTarget.id;
+            cls = app.classList.getClassById(lid);
             $("#edit-class-id").val(cls.name);
             $("#edit-class-title").val(cls.title);
             $("#edit-class-who").val(cls.instructor);
@@ -120,7 +120,7 @@
             $("#edit-class").popup("close");
         },
         /* clear the text fields in the class detail popup when it closes */
-        classPopupOnCloseHandler: function (event, ui) {
+        classPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-class :text").val("");
         },
         /***************************************************************************
@@ -140,8 +140,8 @@
                 makeClassSection("ITEC 120", "Principles of Computer Science I", "Dr. Braffitt", "DA 225", "MWRF 11 - 11:50 AM"),
                 makeClassSection("MATH 151", "Calculus I", "Cabbage", "RU 314", "MWF 1 - 1:50 PM"),
                 makeClassSection("ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM")
-            ];
-            for (var i = 0; i < someClasses.length; ++i) {
+            ], i = 0, scl = someClasses.length;
+            for (i; i < scl; i += 1) {
                 app.classList.addClass(someClasses[i]);
             }
         },
@@ -149,37 +149,36 @@
          * ClassList singleton object
          * 'Mega-list' object that keeps in-memory class/assignment objects
          * and has public methods for adding/deleting stuff and things.
+         * Note: The private members are comma-separated; all part of the same 'var' declaration
          **************************************************************************/
-        classList: function () {
+        classList: (function () {
             // table of classes, so we don't have to re-query the db all the time
-            var allClasses = {};
-            
+            var allClasses = {},
             // generate html to represent a single class in our list of classes
-            var getClassListItemHtml = function (cls) {
-                var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
-                    "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
-                    cls.title, "</strong></p><p>", cls.instructor, "</p><p>", 
-                    cls.location, "</p><p>", cls.times, "</p></a></li>"];
-                return piecesArr.join("");
-            };
-            
-            // rebuild the displayed jQuery listView in the classes tab
-            var updateClassListDom = function () {
-                $("ul#classList").empty();
-                for (var id in allClasses) {
-                    if (allClasses.hasOwnProperty(id)) {
-                        var oneClass = allClasses[id];
-                        var $newBits = $(getClassListItemHtml(oneClass));
-                        $("ul#classList").append($newBits);
+                getClassListItemHtml = function (cls) {
+                    var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
+                        "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
+                        cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
+                        cls.location, "</p><p>", cls.times, "</p></a></li>"];
+                    return piecesArr.join("");
+                },
+                // rebuild the displayed jQuery listView in the classes tab
+                updateClassListDom = function () {
+                    var id, oneClass, $newBits,
+                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
+                    $("ul#classList").empty();
+                    for (id in allClasses) {
+                        if (allClasses.hasOwnProperty(id)) {
+                            oneClass = allClasses[id];
+                            $newBits = $(getClassListItemHtml(oneClass));
+                            $("ul#classList").append($newBits);
+                        }
                     }
-                }
-                var $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
-                $("ul#classList").append($addBtn);
-                $("#add-new-class-btn").on("click", app.addNewClassHandler);
-                $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
-                $("ul#classList").listview("refresh");
-            };
-            
+                    $("ul#classList").append($addBtn);
+                    $("#add-new-class-btn").on("click", app.addNewClassHandler);
+                    $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
+                    $("ul#classList").listview("refresh");
+                };
             // return public methods in an object literal
             return {
                 /* Given a classSection object, insert to table, add in list, 
@@ -228,10 +227,10 @@
                             "sql": "Select * From Classes Where cname != 'none'",
                             "data": [],
                             "success": function (transaction, result) {
-                                var rl = result.rows.length;
-                                for (var i = 0; i < rl; ++i) {
-                                    var r = result.rows.item(i);
-                                    var someClass = makeClassSection(r.cname, r.ctitle, r.instructor, r.location, r.times);
+                                var i = 0, rl = result.rows.length, r, someClass;
+                                for (i; i < rl; i += 1) {
+                                    r = result.rows.item(i);
+                                    someClass = makeClassSection(r.cname, r.ctitle, r.instructor, r.location, r.times);
                                     allClasses[someClass.name] = someClass;
                                 }
                             }
@@ -246,8 +245,8 @@
                 /* Grab an array of the class id's we are storing in the list
                  */
                 getClassIds: function () {
-                    var idArr = [];
-                    for (var id in allClasses) {
+                    var id, idArr = [];
+                    for (id in allClasses) {
                         if (allClasses.hasOwnProperty(id)) {
                             idArr.push(id);
                         }
@@ -256,10 +255,10 @@
                 },
                 /* pull one class object from the list by its id
                  */
-                getClassById: function(cid) {
+                getClassById: function (cid) {
                     return allClasses[cid];
                 }
             };  // end public classList methods
-        }(),
+        }())
     };
 }(this));   // end everything
