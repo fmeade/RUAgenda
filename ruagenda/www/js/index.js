@@ -115,15 +115,15 @@
         /* handler for the delete button in the class detail view */
         classPopupDeleteHandler: function () {
             var cid = $("#edit-class-id").val();
-<<<<<<< Updated upstream
+            
             if (cid !== "") {
                 app.courseList.deleteOne(cid);
             }
-=======
+
             //if (cid !== "") {
                 app.classList.removeClass(cid);
            // }
->>>>>>> Stashed changes
+
             $("#edit-class").popup("close");
         },
         /* handler for the save button in the class detail view */
