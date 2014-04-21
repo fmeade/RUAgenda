@@ -5,8 +5,8 @@
 (function () {
     /* yes please */
     'use strict';
-    /* ClassSection object maker */
-    var makeClassSection = function (_name, _title, _instructor, _location, _times) {
+    /* Structure for a single class/section/course */
+    var makeCourse = function (_name, _title, _instructor, _location, _times) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add class section properties to it
@@ -15,8 +15,17 @@
         that.instructor = _instructor;
         that.location = _location;
         that.times = _times;
-        that.assignments = [];
         // return the extended object
+        return that;
+    };
+    /* Structure for a single assginment's attributes */
+    var makeAssignment = function (_title, _desc, _due, _notify, _course) {
+        var that = Object.create(null);
+        that.title = _title;
+        that.desc = _desc;
+        that.dueDate = _due;
+        that.notifyDate = _notify;
+        that.course = _course;
         return that;
     };
     /* Our primary namespace, bound to 'window' so we can access it from in HTML */
@@ -63,7 +72,7 @@
             app.initializeLDB();
             /* use for initial table population if you need more data
              * app.makeSampleClasses(); */
-            app.classList.populateClassList();
+            app.courseList.readCourseList();
         },
         /* handler when we tapclick the "Add new class" list item */
         addNewClassHandler: function (/* event */) {
@@ -87,7 +96,7 @@
             $("div#edit-class h3").text("Edit class details");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
-            cls = app.classList.getClassById(lid);
+            cls = app.courseList.getOne(lid);
             $("#edit-class-id").val(cls.name);
             $("#edit-class-title").val(cls.title);
             $("#edit-class-who").val(cls.instructor);
@@ -100,13 +109,13 @@
         classPopupDeleteHandler: function () {
             var cid = $("#edit-class-id").val();
             if (cid !== "") {
-                app.classList.removeClass(cid);
+                app.courseList.deleteOne(cid);
             }
             $("#edit-class").popup("close");
         },
         /* handler for the save button in the class detail view */
         classPopupSaveHandler: function () {
-            var section = makeClassSection(
+            var section = makeCourse(
                 $("#edit-class-id").val(),
                 $("#edit-class-title").val(),
                 $("#edit-class-who").val(),
@@ -115,7 +124,7 @@
             );
             /* rudimentary opaque validation, no empty class names */
             if (section.name !== "") {
-                app.classList.saveClass(section);
+                app.courseList.save(section);
             }
             $("#edit-class").popup("close");
         },
@@ -136,64 +145,38 @@
          */
         makeSampleClasses: function () {
             var someClasses = [
-                makeClassSection("ITEC 110", "Principles of Information Technology", "Dr. Htay", "MG 203", "TR 3:30 - 4:45 PM"),
-                makeClassSection("ITEC 120", "Principles of Computer Science I", "Dr. Braffitt", "DA 225", "MWRF 11 - 11:50 AM"),
-                makeClassSection("MATH 151", "Calculus I", "Cabbage", "RU 314", "MWF 1 - 1:50 PM"),
-                makeClassSection("ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM")
+                makeCourse("ITEC 110", "Principles of Information Technology", "Dr. Htay", "MG 203", "TR 3:30 - 4:45 PM"),
+                makeCourse("ITEC 120", "Principles of Computer Science I", "Dr. Braffitt", "DA 225", "MWRF 11 - 11:50 AM"),
+                makeCourse("MATH 151", "Calculus I", "Cabbage", "RU 314", "MWF 1 - 1:50 PM"),
+                makeCourse("ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM")
             ], i = 0, scl = someClasses.length;
             for (i; i < scl; i += 1) {
-                app.classList.addClass(someClasses[i]);
+                app.courseList.addClass(someClasses[i]);
             }
         },
         /***************************************************************************
-         * ClassList singleton object
+         * courseList singleton object
          * 'Mega-list' object that keeps in-memory class/assignment objects
          * and has public methods for adding/deleting stuff and things.
          * Note: The private members are comma-separated; all part of the same 'var' declaration
          **************************************************************************/
-        classList: (function () {
-            // table of classes, so we don't have to re-query the db all the time
-            var allClasses = {},
-            // generate html to represent a single class in our list of classes
-                getClassListItemHtml = function (cls) {
-                    var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
-                        "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
-                        cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
-                        cls.location, "</p><p>", cls.times, "</p></a></li>"];
-                    return piecesArr.join("");
-                },
-                // rebuild the displayed jQuery listView in the classes tab
-                updateClassListDom = function () {
-                    var id, oneClass, $newBits,
-                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
-                    $("ul#classList").empty();
-                    for (id in allClasses) {
-                        if (allClasses.hasOwnProperty(id)) {
-                            oneClass = allClasses[id];
-                            $newBits = $(getClassListItemHtml(oneClass));
-                            $("ul#classList").append($newBits);
-                        }
-                    }
-                    $("ul#classList").append($addBtn);
-                    $("#add-new-class-btn").on("click", app.addNewClassHandler);
-                    $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
-                    $("ul#classList").listview("refresh");
-                };
+        courseList: (function () {
+            var allCourses = {};
             // return public methods in an object literal
             return {
                 /* Given a classSection object, insert to table, add in list, 
                  * and rebuild the view if all that was successful
                  */
-                saveClass: function (cls) {
+                save: function (course) {
                     html5sql.process(
                         [{
                             "sql": "Insert or Replace into Classes Values (?, ?, ?, ?, ?)",
-                            "data": [ cls.name, cls.title, cls.instructor, cls.location, cls.times ],
+                            "data": [ course.name, course.title, course.instructor, course.location, course.times ],
                             "success": function (transaction, results) {} // don't care...
                         }],
                         function () {
-                            allClasses[cls.name] = cls;
-                            updateClassListDom();
+                            allCourses[course.name] = course;
+                            app.domFuncs.updateCourseListDom();
                         },
                         app.logSqlError
                     );
@@ -201,27 +184,50 @@
                 /* Given a class id, remove that class from memory and db
                  * and redraw the class list view
                  */
-                removeClass: function (clsId) {
+                deleteOne: function (courseId) {
                     html5sql.process(
                         [{
                             "sql": "Delete From Classes Where cname = ?",
-                            "data": [ clsId ],
+                            "data": [ courseId ],
                             "success": function (transaction, results) {} // don't care...
                         }],
                         function () {
-                            delete allClasses[clsId];
-                            updateClassListDom();
+                            delete allCourses[courseId];
+                            app.domFuncs.updateCourseListDom();
                         },
                         app.logSqlError
                     );
                 },
+                /* Be careful with this!
+                 * This will delete every entry in the classes datatbase!
+                  */
+                deleteAll: function () {
+                    for (var courseId in allCourses) {
+                        if (allCourses.hasOwnProperty(courseId)) {
+                            courseList.deleteOne(courseId);
+                        }
+                    }
+                },
+                getOne: function (courseId) {
+                    // if that id is not in our list, try to fetch it
+                    return allCourses[courseId];
+                },
+                getAll: function () {
+                    var res = [];
+                    for (var id in allCourses) {
+                        if (allCourses.hasOwnProperty(id)) {
+                            res.push(allCourses[id]);
+                        }
+                    }
+                    return res;
+                },
                 /** queries the database for all class data,
-                 * populates allClasses list, and rebuilds the 'view'
+                 * populates allCourses list, and rebuilds the 'view'
                  */
-                populateClassList: function () {
-                    // clear the allClasses table, jic
-                    allClasses = {};
-                    // call the local db; callbacks re-populat allClasses
+                readCourseList: function () {
+                    // clear the allCourses table, jic
+                    allCourses = {};
+                    // call the local db; callbacks re-populate allCourses
                     html5sql.process(
                         [{
                             "sql": "Select * From Classes Where cname != 'none'",
@@ -230,14 +236,13 @@
                                 var i = 0, rl = result.rows.length, r, someClass;
                                 for (i; i < rl; i += 1) {
                                     r = result.rows.item(i);
-                                    someClass = makeClassSection(r.cname, r.ctitle, r.instructor, r.location, r.times);
-                                    allClasses[someClass.name] = someClass;
+                                    someClass = makeCourse(r.cname, r.ctitle, r.instructor, r.location, r.times);
+                                    allCourses[someClass.name] = someClass;
                                 }
                             }
                         }],
                         function () {
-                            // if our sql executes, update the 'view'
-                            updateClassListDom();
+                            app.domFuncs.updateCourseListDom();
                         },
                         app.logSqlError
                     );
@@ -246,19 +251,46 @@
                  */
                 getClassIds: function () {
                     var id, idArr = [];
-                    for (id in allClasses) {
-                        if (allClasses.hasOwnProperty(id)) {
+                    for (id in allCourses) {
+                        if (allCourses.hasOwnProperty(id)) {
                             idArr.push(id);
                         }
                     }
                     return idArr;
-                },
-                /* pull one class object from the list by its id
-                 */
-                getClassById: function (cid) {
-                    return allClasses[cid];
                 }
-            };  // end public classList methods
+            };  // end public courseList methods
+        }()),
+        /* contains the funcs for updating dom */
+        domFuncs: (function () {
+            var getCourseListItemHtml = function (cls) {
+                var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
+                    "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
+                    cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
+                    cls.location, "</p><p>", cls.times, "</p></a></li>"];
+                return piecesArr.join("");
+            };
+            return {
+                // rebuild the displayed jQuery listView in the classes tab
+                updateCourseListDom: function () {
+                    var id, oneClass, $newBits,
+                        allClasses = app.courseList.getAll(),
+                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
+                    $("ul#classList").empty();
+                    for (id in allClasses) {
+                        if (allClasses.hasOwnProperty(id)) {
+                            oneClass = allClasses[id];
+                            $newBits = $(getCourseListItemHtml(oneClass));
+                            $("ul#classList").append($newBits);
+                        }
+                    }
+                    $("ul#classList").append($addBtn);
+                    $("#add-new-class-btn").on("click", app.addNewClassHandler);
+                    $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
+                    $("ul#classList").listview("refresh");
+                }
+            };
+            
         }())
+
     };
 }(this));   // end everything
