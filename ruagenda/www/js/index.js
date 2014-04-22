@@ -13,23 +13,44 @@
     /* yes please */
     'use strict';
 
-    var big;
+    /* A name for the large, ungainly class/assignment list object thing. What monster is this? */
+    var courseList, taskList;
 
-    /* Structure for a single assginment's attributes */
-    var makeAssignment = function (_title, _desc, _due, _notify) {
+    /**
+     * Constructor for a single assignment (a.k.a. task) object
+     * Invoked w/out the 'new' keyword: `var taskObj = makeAssignment(...);`
+     * @param  {string} _title
+     * @param  {string} _course
+     * @param  {string} _desc
+     * @param  {Date} _due
+     * @param  {Date} _notify
+     * @return {Task Object}
+     */
+    function makeAssignment (_title, _course, _desc, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
         that.title = _title;
+        that.course = _course;
         that.desc = _desc;
-        that.dueDate = _due;        // these two MUST be Date objects!
-        that.notifyDate = _notify;  // --^
+        that.dueDate = _due;
+        that.notifyDate = _notify;
+        that.id = md5(_title + "-" + _course);  // unique id by hashing the title and course together
         // return the extended object
         return that;
-    };
+    }
 
-    /* Structure for a single class/section/course */
-    var makeCourse = function (_name, _title, _instructor, _location, _times) {
+    /**
+     * Constructor for a single course object
+     * Invoked w/out the 'new' keyword: `var courseObj = makeCourse(...);`
+     * @param  {string} _name
+     * @param  {string} _title
+     * @param  {string} _instructor
+     * @param  {string} _location
+     * @param  {string} _times
+     * @return {Course Object}
+     */
+    function makeCourse (_name, _title, _instructor, _location, _times) {
         var that = Object.create(null);
         // basic properties
         that.name = _name;
@@ -37,75 +58,20 @@
         that.instructor = _instructor;
         that.location = _location;
         that.times = _times;
-        // assignments associated with this class
-        that.assignments = [];
-
-        /* some private functions */
-        // compare two assignments to sort by due date
-        function compareTaskDates (t1, t2) {
-            var t1d = t1.dueDate.getTime(),
-                t2d = t1.dueDate.getTime();
-            if (t1d < t2d) {
-                return -1;
-            }
-            else if (t1d > t2d) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        }
-        // when we create this object, any existing assignments for it from the db
-        function initializeTaskList () {
-            html5sql.process(
-                [{
-                    "sql": "Select * from Assignments Where course = ?",
-                    "data": [ that.name ],
-                    "success": function (transaction, result) {
-                        var i = 0, rl = result.rows.length, r, someClass;
-                        for (i; i < rl; i += 1) {
-                            r = result.rows.item(i);
-                            someTask = makeAssignment(r.name, r.description, r.dueDate, r.whenNotify);
-                            that.assignments.push(someTask);
-                        }
-                    }
-                }],
-                function () {
-                    // need gui update here
-                },
-                app.logSqlError
-            );
-        }
-        initializeTaskList();
-
-        // add some public methods
-        that.addTask = function (taskObj) {
-            // add to database
-            // on success, add to list
-        };
-        that.editTask = function (taskIndex, newTaskObj) {
-
-        };
-        that.deleteTask = function (taskIndex) {
-
-        };
-        that.deleteAllTasks = function () {
-
-        };
-        that.getTask = function (taskIndex) {
-
-        };
 
         return that;
-    };
-    /* this is a constructor, BUT we should only ever call it once.
-      It would be nice if it were a true singleton, but that doesn't really work
-      because we can only instantiate this object in response to the 
-      database being successfully initialized. 
-    */
-    var initCourseList = function () {
+    }
+
+    /**
+     * Used to initialize the courseList object.
+     * This function should only be called ONCE, after the database has been initialized.
+     * (courseList ought to be a singleton, but is not because its initialization depends
+     * on database initialization.)
+     * @return {Course List Object}
+     */
+    function initCourseList () {
         var allCourses = {};
-        // when we create this singleton, fetch data from the db
+        // when we create this, fetch data from the db
         html5sql.process(
             [{
                 "sql": "Select * From Classes Where cname != 'none'",
@@ -126,8 +92,9 @@
         );
         // return public methods in an object literal
         return {
-            /* Given a classSection object, insert to table, add in list, 
-             * and rebuild the view if all that was successful
+            /**
+             * Adds a course to list and database, calls dom update method on success.
+             * @param {Course Object} course
              */
             addCourse: function (course) {
                 html5sql.process(
@@ -143,27 +110,41 @@
                     app.logSqlError
                 );
             },
+            /**
+             * Update the attributes of an existing course in the list and database.
+             * Calls dom updater method on successful update.
+             * @param  {String} courseId
+             * @param  {String} newTitle
+             * @param  {String} newIns
+             * @param  {String} newLoc
+             * @param  {String} newTime
+             * @return {undefined}
+             */
             editCourse: function (courseId, newTitle, newIns, newLoc, newTime) {
                 html5sql.process(
                     [{
-                        "sql": "Update Table Classes Set ctitle = ?, instructor = ?, location = ?, times = ? Where cname = ?",
+                        "sql": "Update Classes Set ctitle = ?, instructor = ?, location = ?, times = ? Where cname = ?",
                         "data": [ newTitle, newIns, newLoc, newTime, courseId ],
                         "success": function (transaction, results) {}
                     }],
                     function () {
                         // update in list
-                        allCourses.courseId.title = newTitle;
-                        allCourses.courseId.instructor = newIns;
-                        allCourses.courseId.location = newLoc;
-                        allCourses.courseId.times = newTime;
+                        allCourses[courseId].title = newTitle;
+                        allCourses[courseId].instructor = newIns;
+                        allCourses[courseId].location = newLoc;
+                        allCourses[courseId].times = newTime;
                         // trigger dom refresh
                         app.domFuncs.updateCourseListDom();
                     },
                     app.logSqlError
                 );
             },
-            /* Given a class id, remove that class from memory and db
-             * and redraw the class list view
+            /**
+             * Remove a course from this list and from the database, AS WELL AS
+             * deleting all assignments associated with that class.
+             * Calls a dom update method after success.
+             * @param  {String} courseId
+             * @return {undefined}
              */
             deleteCourse: function (courseId) {
                 html5sql.process(
@@ -179,14 +160,17 @@
                     }],
                     function () {
                         delete allCourses[courseId];
+                        taskList.deleteTasksByCourse(courseId);
                         app.domFuncs.updateCourseListDom();
+                        // TODO: also update assignment list gui/view/bits
                     },
                     app.logSqlError
                 );
             },
-            /* Be careful with this!
-             * This will delete every entry in the classes database!
-              */
+            /**
+             * Deletes (almost) everything - all classes, and therefore all assignments for those classes.
+             * @return {undefined}
+             */
             deleteAllCourses: function () {
                 for (var courseId in allCourses) {
                     if (allCourses.hasOwnProperty(courseId)) {
@@ -194,9 +178,18 @@
                     }
                 }
             },
+            /**
+             * Retrieve a course object from the list by id/name
+             * @param  {String} courseId
+             * @return {Course Object}
+             */
             getCourse: function (courseId) {
                 return allCourses[courseId];
             },
+            /**
+             * Retrieve an array of all courses stored in this list
+             * @return {Array(CourseObject)}
+             */
             getAllCourses: function () {
                 var res = [];
                 for (var id in allCourses) {
@@ -206,7 +199,9 @@
                 }
                 return res;
             },
-            /* Grab an array of the class id's we are storing in the list
+            /**
+             * Retrieve an array of just the ids of courses stored in this list.
+             * @return {Array(String)}
              */
             getCourseIds: function () {
                 var id, idArr = [];
@@ -218,7 +213,179 @@
                 return idArr;
             }
         };  // end public courseList methods
-    };
+    }
+
+    /**
+     * Constructor for the taskList object.  This function should
+     * only be called ONCE, after the database has been initialized.
+     * @see initCourseList
+     * @return {Task List Object}
+     */
+    function initTaskList () {
+        var allTasks = {};
+        /**
+         * Sorts an array of task objects by date and returns sorted copy.
+         * TODO: possibly sorting in the reverse order that we want?
+         * @param  {Array(Task Object)} tasks
+         * @return {Array(Task Object)}
+         */
+        function sortByDate (tasks) {
+            var map = tasks.map(function (e, i) {
+                return { index: i, value: e.dueDate.getTime() };
+            });
+            map.sort(function (a, b) {
+                if (a < b) {
+                    return -1;
+                }
+                else if (a > b) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            });
+            var result = map.map(function (e) {
+                return list[e.index];
+            });
+            return result;
+        }
+
+        // this happens when the initializer is executed.
+        html5sql.process(
+            [{
+                "sql": "SELECT name, course, description, dueDate, whenNotify FROM Assignments",
+                "data": [],
+                "success": function (transaction, result) {
+                    var i = 0, rl = result.rows.length, r, oneTask;
+                    for (i; i < rl; i += 1) {
+                        r = result.rows.item(i);
+                        oneTask = makeAssignment(r.name, r.course, r.description, new Date(r.dueDate), new Date(r.whenNotify));
+                        allTasks[oneTask.id] = oneTask;
+                    }
+                }
+            }],
+            function () {
+                // TODO: update display here
+            },
+            app.logSqlError
+        );
+
+        return {
+            /**
+             * Saves new or replaces existing task/assignment
+             * @param  {Task Object} taskObj
+             * @return {undefined}
+             */
+            saveTask: function (taskObj) {
+                html5sql.process(
+                    [{
+                        "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, whenNotify) VALUES (?, ?, ?, ?, ?)",
+                        "data": [ taskObj.name, taskObj.course, taskObj.desc, taskObj.dueDate.getTime(), taskObj.notifyDate.getTime() ],
+                        "success": function (transaction, result) {}
+                    }],
+                    function () {
+                        allTasks[taskObj.id] = taskObj;
+                        // update display here
+                    },
+                    app.logSqlError
+                );
+            },
+            /**
+             * Removes a task from list and database
+             * @param  {String} taskId
+             * @return {undefined}
+             */
+            deleteTask: function (taskId) {
+                var thisTask = allTasks[taskId],
+                    thisName = thisTask.name,
+                    thisCourse = thisTask.course;
+                html5sql.process(
+                    [{
+                        "sql": "DELETE FROM Assignments WHERE name = ? AND course = ?",
+                        "data": [ thisName, thisCourse ],
+                        "success": function (transaction, result) {}
+                    }],
+                    function () {
+                        delete allTasks[taskId];
+                        // update display here
+                    },
+                    app.logSqlError
+                );
+            },
+            /**
+             * Removes all tasks, but not the courses
+             * @return {undefined}
+             */
+            deleteAllTasks: function () {
+                for (var id in allTasks) {
+                    if (allTasks.hasOwnProperty(id)) {
+                        deleteTask(id);
+                    }
+                }
+            },
+            /**
+             * Removes all assignments associated with a course
+             * @param  {String} courseId
+             * @return {undefined}
+             */
+            deleteTasksByCourse: function (courseId) {
+                for (var id in allTasks) {
+                    if (allTasks.hasOwnProperty(id) &&
+                        allTasks[id].course === courseId) {
+                        deleteTask(id);
+                    }
+                }
+            },
+            /**
+             * Retrieves a task object from the list by identifier
+             * @param  {String} taskId
+             * @return {Task Object}
+             */
+            getTask: function (taskId) {
+                return allTasks[taskId];
+            },
+            /**
+             * Retrieve an array of all tasks, ordered by date
+             * @return {Array(Task Object)}
+             */
+            getAllByDate: function () {
+                var id,
+                    res = [];
+                for (id in allTasks) {
+                    if (allTasks.hasOwnProperty(id)) {
+                        res.push(allTasks[id]);
+                    }
+                }
+                return sortByDate(res);
+            },
+            /**
+             * Retrieve an object with class id's paired to arrays of tasks
+             * @return {Object { id: Array(Task Object)}}
+             */
+            getAllByClass: function () {
+                var id, cname, task, res = {};
+                // add every task to an array accessed by course attribute of the task
+                for (id in allTasks) {
+                    if (allTasks.hasOwnProperty(id)) {
+                        task = allTasks[id];
+                        cname = task.course;
+                        // if the result object doesn't have an array for this course name yet, make one
+                        if (res[cname] === undefined) {
+                            res[cname] = [];
+                        }
+                        res[cname].push(task);
+                    }
+                }
+                // sort each subarray by date
+                for (cname in res) {
+                    if (res.hasOwnProperty(cname)) {
+                        res[cname] = sortByDate(res[cname]);
+                    }
+                }
+                return res;
+            }
+        };
+    }
 
     /* Our primary namespace, bound to 'window' so we can access it from in HTML */
     window.app = {
@@ -241,19 +408,17 @@
             html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024 * 1024 * 5);
             html5sql.process(
                 [
-                    "create table if not exists Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",
-                    "create table if not exists Assignments ( id INTEGER PRIMARY KEY AUTOINCREMENT, course TEXT NOT NULL REFERENCES Classes(cname) DEFAULT 'none', name TEXT UNIQUE NOT NULL DEFAULT 'Assignment', description TEXT DEFAULT '', dueDate INTEGER, whenNotify  INTEGER );"
+                    "CREATE TABLE IF NOT EXISTS Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",
+                    "CREATE TABLE IF NOT EXISTS Assignments ( name TEXT NOT NULL, course TEXT NOT NULL REFERENCES Classes(cname), description TEXT DEFAULT '', dueDate INTEGER, whenNotify INTEGER, CONSTRAINT task_class_pk PRIMARY KEY(name, course));"
                 ],
                 function () {
                     console.log("Initialized local database tables");
-                    big = initCourseList();
+                    courseList = initCourseList();
+                    taskList = initTaskList();
                 },
                 app.logSqlError
             );
         },
-        /***********************************************************************
-         * Event handlers
-         **********************************************************************/
         /* deviceready Event Handler
          * (the phonegap api is not ready until this function is called!)
          * The scope of 'this' is the event. In order to call the 'receivedEvent'
@@ -287,7 +452,7 @@
             $("div#edit-class h3").text("Edit class details");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
-            cls = big.getCourse(lid);
+            cls = courseList.getCourse(lid);
             $("#edit-class-id").val(cls.name);
             $("#edit-class-title").val(cls.title);
             $("#edit-class-who").val(cls.instructor);
@@ -304,12 +469,8 @@
             var cid = $("#edit-class-id").val();
             
             if (cid !== "") {
-                big.deleteCourse(cid);
+                courseList.deleteCourse(cid);
             }
-
-            //if (cid !== "") {
-                app.classList.removeClass(cid);
-           // }
 
             $("#edit-class").popup("close");
         },
@@ -324,12 +485,12 @@
             );
             /* rudimentary opaque validation, no empty class names */
             if (section.name !== "") {
-                big.addCourse(section);
+                courseList.addCourse(section);
             }
             $("#edit-class").popup("close");
         },
         classPopupEditBtnHandler: function () {
-            big.editCourse(
+            courseList.editCourse(
                 $("#edit-class-id").val(),
                 $("#edit-class-title").val(),
                 $("#edit-class-who").val(),
@@ -361,7 +522,7 @@
                 makeCourse("ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM")
             ], i = 0, scl = someClasses.length;
             for (i; i < scl; i += 1) {
-                big.addCourse(someClasses[i]);
+                courseList.addCourse(someClasses[i]);
             }
         },
         
@@ -378,7 +539,7 @@
                 // rebuild the displayed jQuery listView in the classes tab
                 updateCourseListDom: function () {
                     var id, oneClass, $newBits,
-                        allClasses = big.getAllCourses(),
+                        allClasses = courseList.getAllCourses(),
                         $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
                     $("ul#classList").empty();
                     for (id in allClasses) {
