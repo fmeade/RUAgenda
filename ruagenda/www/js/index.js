@@ -1,4 +1,11 @@
 /*
+*  index.js
+*  Bowtie Code
+*
+*  Functionality for the application
+*/
+
+/*
  * TODO: migrate database functionality to 'com.phonegap.plugins.sqlite'
  * @see https://github.com/brodysoft/Cordova-SQLitePlugin
  */
@@ -295,9 +302,15 @@
         /* handler for the delete button in the class detail view */
         classPopupDeleteHandler: function () {
             var cid = $("#edit-class-id").val();
+            
             if (cid !== "") {
                 big.deleteCourse(cid);
             }
+
+            //if (cid !== "") {
+                app.classList.removeClass(cid);
+           // }
+
             $("#edit-class").popup("close");
         },
         /* handler for the save button in the class detail view */

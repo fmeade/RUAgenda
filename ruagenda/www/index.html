@@ -53,7 +53,7 @@
                 </ul>
             </div>
             
-            <!-- detail view popup for one assignment -->
+            <!-- PROBABLY USELESS detail view popup for one assignment -->
             <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="a">
                 <form>
                     <h3>Edit Assignment</h3>
@@ -70,20 +70,20 @@
                 </form>
             </div>
             
-            <!-- popup for new assignment -->
+            <!-- Assignment detail popup (new OR edit) -->
             <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="a">
                 <form>
                     <h3>Add Assignment</h3>
                     <label for="name" class="ui-accessible">Assignment Name:</label>
-                    <input type="text" name="assignment" id="an" value="Name of the Assignment">
+                    <input type="text" name="task-edit-name" id="an" placeholder="Name of Assignment" value="">
                     <label for="description" class="ui-accessible">Description:</label>
-                    <input type="text" name="description" id="des" value="Description of assignment">
+                    <input type="text" name="task-edit-description" id="des" placeholder="Description" value="">
                     <label for="class" class="ui-accessible">Class:</label>
-                    <input type="text" name="class" id="class" value="What class?"> 
+                    <input type="text" name="task-edit-class" id="class" placeholder="Class ID" value=""> 
                     <label for="due" class="ui-accessible">Due Date:</label>
-                    <input type="text" name="duedate" id="due" value="When is it due?">
-                    <label for="notify" class="ui-accessible">Notify Me:</label>
-                    <input type="text" name="notify" id="notify" value="notify me when it's..">
+                    <input type="text" name="task-edit-duedate" id="due" placeholder="When is it due?" value="">
+                    <label for="notify" class="ui-accessible">Notification:</label>
+                    <input type="text" name="task-edit-notify" id="notify" placeholder="Notify me..." value="">
                 </form>
             </div>
             
@@ -118,7 +118,7 @@
                 </fieldset></form>
             </div> <!--/edit-class popup-->
  
-            <!-- sign-in form -->
+            <!-- USELESS sign-in form -->
             <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
                 <form>
                     <h3>Please sign in</h3>
@@ -145,7 +145,7 @@
                     
                     <ul data-role="listview" data-icon="edit" data-filter="true" 
                         data-filter-placeholder="Filter assignments..." >
-                        <li><a href="#sign-in" data-rel="popup" data-position-to="window">Midterm
+                        <li><a href="#task-edit" data-rel="popup" data-position-to="window">Midterm
                             <p>Midterm Exam on ch. 1-4<br />
                             (No notification)</p>
                             <p class="ui-li-aside">ART 111<br />
@@ -187,7 +187,7 @@
                         data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
                         <h3>ITEC 110<span class="ui-li-count">2</span></h3>
                         <ul data-role="listview" data-icon="edit">
-                            <li><a <a href="#task-detail" data-rel="popup" data-position-to="window">Test 1
+                            <li><a <a href="#task-edit" data-rel="popup" data-position-to="window">Test 1
                                 <p class="ui-li-aside">Fri, 4/11</p>
                             </a></li>
                             <li><a href="#task-edit" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-mini ui-icon-plus ui-btn-icon-right">(Add Assignment)</a></li>
