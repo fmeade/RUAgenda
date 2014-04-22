@@ -100,7 +100,7 @@
     };
     /* this is a constructor, BUT we should only ever call it once.
       It would be nice if it were a true singleton, but that doesn't really work
-      because we can only instantiate this object in response to the 
+      because we can only instantiate the object in response to the 
       database being successfully initialized. 
     */
     var initCourseList = function () {
@@ -146,16 +146,16 @@
             editCourse: function (courseId, newTitle, newIns, newLoc, newTime) {
                 html5sql.process(
                     [{
-                        "sql": "Update Table Classes Set ctitle = ?, instructor = ?, location = ?, times = ? Where cname = ?",
+                        "sql": "Update Classes Set ctitle = ?, instructor = ?, location = ?, times = ? Where cname = ?",
                         "data": [ newTitle, newIns, newLoc, newTime, courseId ],
                         "success": function (transaction, results) {}
                     }],
                     function () {
                         // update in list
-                        allCourses.courseId.title = newTitle;
-                        allCourses.courseId.instructor = newIns;
-                        allCourses.courseId.location = newLoc;
-                        allCourses.courseId.times = newTime;
+                        allCourses[courseId].title = newTitle;
+                        allCourses[courseId].instructor = newIns;
+                        allCourses[courseId].location = newLoc;
+                        allCourses[courseId].times = newTime;
                         // trigger dom refresh
                         app.domFuncs.updateCourseListDom();
                     },
