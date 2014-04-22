@@ -503,6 +503,77 @@
         classPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-class :text").val("");
         },
+        addNewTaskHandler: function () {
+            // hide the delete/remove button
+            $("#edi-task-delete").hide();
+            // enable the class title field
+            $("#edit-task-id").prop("disabled", false);
+            // set the 'legend' text
+            $("div#edit-task h3").text("Add a new class");
+            // set handler
+            $("#edit-task-save").off("click");
+            $("#edit-task-save").on("click", app.taskPopupAddBtnHandler);
+            // now open the popup
+            $("#edit-task").popup("open");
+        },
+        editTaskHandler: function (event) {
+            var lid, task;
+            // show the delete/remove button
+            $("#edit-task-delete").show();
+            // disable editing the name/id of the class (it's the key)
+            $("#edit-task-id").prop("disabled", true);
+            // set the 'legend' text
+            $("div#edit-task h3").text("Edit class details");
+            // need to pre-populate the form w/ values
+            lid = event.currentTarget.id;
+            task = taskList.getAssignmentlid);
+            $("#edit-task-title").val(task.title);
+            $("#edit-task-description").val(task.description);
+            $("#edit-task-class").val(task.class);
+            $("#edit-task-dueDate").val(task.dueDate);
+            $("#edit-task-notifyDate").val(task.notifyDate);
+            // set handler
+            $("#edit-task-save").off("click");
+            $("#edit-task-save").on("click", app.classPopupEditBtnHandler);
+            // now open the popup
+            $("#edit-task").popup("open");
+        },
+        taskPopupDeleteHandler: function () {
+            var cid = $("#edit-task-id").val();
+            
+            if (cid !== "") {
+                courseList.deleteCourse(cid);
+            }
+
+            $("#edit-task").popup("close");
+        },
+        taskPopupAddBtnHandler: function () {
+            var section = makeAssignment(
+                $("#edit-task-title").val(),  // text
+                $("#edit-task-description").val(), // text area
+                $("#edit-task-class").val(), // drop down
+                $("#edit-task-due").val(),   // datepicker
+                $("#edit-task-notifyDate").val() // drop down
+            );
+            /* rudimentary opaque validation, no empty class names */
+            if (section.name !== "") {
+                taskList.addTask(section);
+            }
+            $("#edit-task").popup("close");
+        },
+        taskPopupEditBtnHandler: function () {
+            taskList.editTask(
+                $("#edit-task-title").val(),  // text
+                $("#edit-task-description").val(), // text area
+                $("#edit-task-class").val(), // drop down
+                $("#edit-task-due").val(),   // datepicker
+                $("#edit-task-notifyDate").val() // drop down
+            );
+            $("#edit-class").popup("close");
+        },
+        taskPopupOnCloseHandler: function (/*event, ui*/) {
+            $("#edit-task :text").val("");
+        },
         /***************************************************************************
          * Dev/Debug stuff
          **************************************************************************/
@@ -525,6 +596,17 @@
                 courseList.addCourse(someClasses[i]);
             }
         },
+        makeSampleAssignments: function () {
+            var someTasks = [
+                makeAssignment("Midterm","SE Midterm","ITEC 370",null,"10 minutes before"),
+                makeAssignment("Final","SE Final","ITEC 370",null,"5 minutes before"),
+                makeAssignment("HW","SE Hw","ITEC 370",null,"15 minutes before"),
+                makeAssignment("Quiz","SE Quiz 2","ITEC 370",null,"7 minutes before"),
+            ], i = 0, sTask = someTasks.length;
+            for(i;i < sTask; i += 1) {
+                taskList.addTask(someTasks[i]);
+            }
+        }
         
         /* contains the funcs for updating dom */
         domFuncs: (function () {
@@ -553,6 +635,23 @@
                     $("#add-new-class-btn").on("click", app.addNewClassHandler);
                     $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
                     $("ul#classList").listview("refresh");
+                },
+                updateTaskListDom: function () {
+                    var id, oneTask, $newBits,
+                        allTasks = taskList.getAllTasks(),
+                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-task-btn'>Add new task...</a></li>");
+                    $("ul#taskList").empty();
+                    for (id in alltasks) {
+                        if (allTasks.hasOwnProperty(id)) {
+                            oneTask = allTasks[id];
+                            $newBits = $(getTaskListItemHtml(oneTask));
+                            $("ul#taskList").append($newBits);
+                        }
+                    }
+                    $("ul#taskList").append($addBtn);
+                    $("#add-new-task-btn").on("click", app.addNewTaskHandler);
+                    $("ul#taskList").on("click", "li a.task-list-item", app.editTaskHandler);
+                    $("ul#taskList").listview("refresh");
                 }
             };
             
