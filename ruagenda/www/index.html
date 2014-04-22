@@ -32,6 +32,9 @@
         <!-- jQuery Mobile -->
         <script type="text/javascript" src="js/jquery.mobile-1.4.2.js"></script>
     </head>
+    
+    
+    
     <body>
         <!-- Start of the main page -->
         <div data-role="page" id="main">
@@ -44,6 +47,8 @@
                     ui-icon-gear ui-btn-icon-notext ui-corner-all">Settings Maybe</a>
             </div><!-- /header -->
             
+            
+            
             <!-- top right menu -->
             <div data-role="popup" id="popup-menu" class="popupParent">
                 <ul data-role="listview" data-inset="false">
@@ -51,7 +56,9 @@
                     <li><a href="#">Reset Everything</a></li>
                     <li><a href="#">Something Else</a></li>
                 </ul>
-            </div>
+            </div><!-- end popup menu -->
+            
+            
             
             <!-- PROBABLY USELESS detail view popup for one assignment -->
             <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="a">
@@ -68,7 +75,9 @@
                     <label for="notify" class="ui-accessible">Notify Me:</label>
                     <input type="text" name="notify" id="notify" value="1 day before">
                 </form>
-            </div>
+            </div><!-- end popup task detail -->
+            
+            
             
             <!-- Assignment detail popup (new OR edit) -->
             <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="a">
@@ -85,7 +94,9 @@
                     <label for="notify" class="ui-accessible">Notification:</label>
                     <input type="text" name="task-edit-notify" id="notify" placeholder="Notify me..." value="">
                 </form>
-            </div>
+            </div><!-- end popup task edit -->
+            
+            
             
             <!-- class detail popup (new OR edit)
             (Mostly does not need to be dynamic, so we can genuinely hardcode it) -->
@@ -118,6 +129,8 @@
                 </fieldset></form>
             </div> <!--/edit-class popup-->
  
+ 
+ 
             <!-- USELESS sign-in form -->
             <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
                 <form>
@@ -139,6 +152,8 @@
                         <li><a href="#three" data-ajax="false">Class Schedule</a></li>
                     </ul>
                 </div>
+
+
 
                 <!-- first tab content here -->
                 <div id="one" class="ui-content">
@@ -178,6 +193,8 @@
                     </ul>
                     
                 </div>
+
+
 
                 <!-- second tab content here -->
                 <div id="two" class="ui-content">
