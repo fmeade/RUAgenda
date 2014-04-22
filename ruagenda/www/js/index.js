@@ -1,21 +1,16 @@
-/*
-*  index.js
-*  Bowtie Code
-*
-*  Functionality for the application
-*/
-
-/*
+/*  index.js
+ *  Bowtie Code - Spring 2014
+ *
+ *  JavaScript code for the RU Agenda Phonegap application
+ *
  * TODO: migrate database functionality to 'com.phonegap.plugins.sqlite'
  * @see https://github.com/brodysoft/Cordova-SQLitePlugin
  */
 (function () {
     /* yes please */
     'use strict';
-
-    /* A name for the large, ungainly class/assignment list object thing. What monster is this? */
-    var courseList, taskList;
-
+    var courseList, // object holds list of courses and manages 'Classes' table in db
+        taskList;   // " " " " assignments and manages 'Assignments' table in db
     /**
      * Constructor for a single assignment (a.k.a. task) object
      * Invoked w/out the 'new' keyword: `var taskObj = makeAssignment(...);`
@@ -39,7 +34,6 @@
         // return the extended object
         return that;
     }
-
     /**
      * Constructor for a single course object
      * Invoked w/out the 'new' keyword: `var courseObj = makeCourse(...);`
@@ -61,17 +55,17 @@
 
         return that;
     }
-
     /**
-     * Used to initialize the courseList object.
+     * Used to initialize the 'courseList' object.
      * This function should only be called ONCE, after the database has been initialized.
      * (courseList ought to be a singleton, but is not because its initialization depends
      * on database initialization.)
      * @return {Course List Object}
      */
     function initCourseList () {
+        // private ibject mapping course name/ids to course objects
         var allCourses = {};
-        // when we create this, fetch data from the db
+        // initialize the above from the db when we create the object
         html5sql.process(
             [{
                 "sql": "Select * From Classes Where cname != 'none'",
@@ -86,7 +80,7 @@
                 }
             }],
             function () {
-                app.domFuncs.updateCourseListDom();
+                builders.updateCourseListDom();
             },
             app.logSqlError
         );
@@ -96,7 +90,7 @@
              * Adds a course to list and database, calls dom update method on success.
              * @param {Course Object} course
              */
-            addCourse: function (course) {
+            saveCourse: function (course) {
                 html5sql.process(
                     [{
                         "sql": "Insert or Replace into Classes Values (?, ?, ?, ?, ?)",
@@ -105,12 +99,12 @@
                     }],
                     function () {
                         allCourses[course.name] = course;
-                        app.domFuncs.updateCourseListDom();
+                        builders.updateCourseListDom();
                     },
                     app.logSqlError
                 );
             },
-            /**
+            /** TODO: not used
              * Update the attributes of an existing course in the list and database.
              * Calls dom updater method on successful update.
              * @param  {String} courseId
@@ -134,7 +128,7 @@
                         allCourses[courseId].location = newLoc;
                         allCourses[courseId].times = newTime;
                         // trigger dom refresh
-                        app.domFuncs.updateCourseListDom();
+                        builders.updateCourseListDom();
                     },
                     app.logSqlError
                 );
@@ -161,7 +155,7 @@
                     function () {
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
-                        app.domFuncs.updateCourseListDom();
+                        builders.updateCourseListDom();
                         // TODO: also update assignment list gui/view/bits
                     },
                     app.logSqlError
@@ -214,7 +208,6 @@
             }
         };  // end public courseList methods
     }
-
     /**
      * Constructor for the taskList object.  This function should
      * only be called ONCE, after the database has been initialized.
@@ -222,6 +215,7 @@
      * @return {Task List Object}
      */
     function initTaskList () {
+        // private mapping of task ids (md5 of name and class) task objects
         var allTasks = {};
         /**
          * Sorts an array of task objects by date and returns sorted copy.
@@ -249,8 +243,7 @@
             });
             return result;
         }
-
-        // this happens when the initializer is executed.
+        // this call initializes the allTasks object map from the db
         html5sql.process(
             [{
                 "sql": "SELECT name, course, description, dueDate, whenNotify FROM Assignments",
@@ -269,7 +262,7 @@
             },
             app.logSqlError
         );
-
+        // returning public methods in an object literal
         return {
             /**
              * Saves new or replaces existing task/assignment
@@ -359,7 +352,7 @@
                 return sortByDate(res);
             },
             /**
-             * Retrieve an object with class id's paired to arrays of tasks
+             * Retrieve an object mapping class names to arrays of tasks
              * @return {Object { id: Array(Task Object)}}
              */
             getAllByClass: function () {
@@ -386,24 +379,37 @@
             }
         };
     }
-
-    /* Our primary namespace, bound to 'window' so we can access it from in HTML */
+    /**
+     * Externally accessible namespace - functions in this object can be called 
+     * from html (debug console) as `app.funcName();`
+     * @type {Object}
+     */
     window.app = {
-        // Entry point.  This function is called from bottom of HTML page.
+        /**
+         * Application entry point, called from bottom of HTML document
+         * @return {undefined}
+         */
         initialize: function () {
             this.bindEvents();
         },
-        /* Bind Event Listeners
-         * Bind any events that are required on startup. Common events are:
-         * 'load', 'deviceready', 'offline', and 'online'.
-         * TODO: How to use both jQuery '*ready' events AND the phonegap ready events?
+        /**
+         * Bind any events that are required on startup. 
+         * ('load'.'deviceready', 'online', 'offline', etc.)
+         * @return {undefined}
          */
         bindEvents: function () {
             document.addEventListener('deviceready', this.onDeviceReady, false);
+            // TODO: these events only need to be bound after db init?
             $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
+            $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
         },
-        /* Initialize the local storage database */
+        /**
+         * Initializes the local storage database.
+         * Creates or connects to db via the html5sql.openDatabase method,
+         * and creates our tables if they don't yet exist
+         * @return {undefined}
+         */
         initializeLDB: function () {
             html5sql.openDatabase("edu.radford.agenda.db", "RU-Agena-DB", 1024 * 1024 * 5);
             html5sql.process(
@@ -419,15 +425,19 @@
                 app.logSqlError
             );
         },
-        /* deviceready Event Handler
-         * (the phonegap api is not ready until this function is called!)
-         * The scope of 'this' is the event. In order to call the 'receivedEvent'
-         * function, we must explicity call 'app.receivedEvent(...);'
+        /**
+         * Handles the phonegap 'deviceready' event.  The Phongap api is not ready to
+         * take calls until the deviceready event has fired!
+         * @return {undefined}
          */
         onDeviceReady: function () {
             app.initializeLDB();
         },
-        /* handler when we tapclick the "Add new class" list item */
+        /**
+         * Bound to the onclick event for the "Add new class" item at the
+         * bottom of the class list.  Displays an "Add new class" popup
+         * @return {undefined}
+         */
         addNewClassHandler: function () {
             // hide the delete/remove button
             $("#edit-class-delete").hide();
@@ -435,13 +445,15 @@
             $("#edit-class-id").prop("disabled", false);
             // set the 'legend' text
             $("div#edit-class h3").text("Add a new class");
-            // set handler
-            $("#edit-class-save").off("click");
-            $("#edit-class-save").on("click", app.classPopupAddBtnHandler);
             // now open the popup
             $("#edit-class").popup("open");
         },
-        /* handler when we tapclick an existing item in the list of classes */
+        /**
+         * Handler bound class list, catches onclick events produced by class list items.
+         * Displays the view/edit detail popup for the selected class list item.
+         * @param  {Event} event
+         * @return {undefined}
+         */
         editClassHandler: function (event) {
             var lid, cls;
             // show the delete/remove button
@@ -458,24 +470,25 @@
             $("#edit-class-who").val(cls.instructor);
             $("#edit-class-where").val(cls.location);
             $("#edit-class-when").val(cls.times);
-            // set handler
-            $("#edit-class-save").off("click");
-            $("#edit-class-save").on("click", app.classPopupEditBtnHandler);
             // now open the popup
             $("#edit-class").popup("open");
         },
-        /* handler for the delete button in the class detail view */
+        /**
+         * Handles the onlick event for the 'Delete' button in the "Edit class" popup
+         * @return {undefined}
+         */
         classPopupDeleteHandler: function () {
             var cid = $("#edit-class-id").val();
-            
             if (cid !== "") {
                 courseList.deleteCourse(cid);
             }
-
             $("#edit-class").popup("close");
         },
-        /* handler for the save button in the class detail view */
-        classPopupAddBtnHandler: function () {
+        /**
+         * Handles the onclick even for the "Save" button in the Add New Class popup
+         * @return {undefined}
+         */
+        classPopupSaveBtnHandler: function () {
             var section = makeCourse(
                 $("#edit-class-id").val(),
                 $("#edit-class-title").val(),
@@ -483,29 +496,22 @@
                 $("#edit-class-where").val(),
                 $("#edit-class-when").val()
             );
-            /* rudimentary opaque validation, no empty class names */
+            /* rudimentary opaque validation, no empty class names allowed */
             if (section.name !== "") {
-                courseList.addCourse(section);
+                courseList.saveCourse(section);
             }
             $("#edit-class").popup("close");
         },
-        classPopupEditBtnHandler: function () {
-            courseList.editCourse(
-                $("#edit-class-id").val(),
-                $("#edit-class-title").val(),
-                $("#edit-class-who").val(),
-                $("#edit-class-where").val(),
-                $("#edit-class-when").val()
-            );
-            $("#edit-class").popup("close");
-        },
-        /* clear the text fields in the class detail popup when it closes */
+        /**
+         * When the class new/detail popup closes, clear its fields
+         * @return {undefined}
+         */
         classPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-class :text").val("");
         },
         addNewTaskHandler: function () {
             // hide the delete/remove button
-            $("#edi-task-delete").hide();
+            $("#edit-task-delete").hide();
             // enable the class title field
             $("#edit-task-id").prop("disabled", false);
             // set the 'legend' text
@@ -526,7 +532,7 @@
             $("div#edit-task h3").text("Edit class details");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
-            task = taskList.getAssignmentlid);
+            task = taskList.getAssignment(id);
             $("#edit-task-title").val(task.title);
             $("#edit-task-description").val(task.description);
             $("#edit-task-class").val(task.class);
@@ -574,9 +580,6 @@
         taskPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-task :text").val("");
         },
-        /***************************************************************************
-         * Dev/Debug stuff
-         **************************************************************************/
         /* generic and mostly useless SQL error printing callback */
         logSqlError: function (error, statement) {
             console.log(error);
@@ -607,55 +610,81 @@
                 taskList.addTask(someTasks[i]);
             }
         }
-        
-        /* contains the funcs for updating dom */
-        domFuncs: (function () {
-            var getCourseListItemHtml = function (cls) {
-                var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
-                    "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
-                    cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
-                    cls.location, "</p><p>", cls.times, "</p></a></li>"];
-                return piecesArr.join("");
-            };
-            return {
-                // rebuild the displayed jQuery listView in the classes tab
-                updateCourseListDom: function () {
-                    var id, oneClass, $newBits,
-                        allClasses = courseList.getAllCourses(),
-                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
-                    $("ul#classList").empty();
-                    for (id in allClasses) {
-                        if (allClasses.hasOwnProperty(id)) {
-                            oneClass = allClasses[id];
-                            $newBits = $(getCourseListItemHtml(oneClass));
-                            $("ul#classList").append($newBits);
-                        }
+    }; // end window.app object
+    /**
+     * Object containing the methods that manipulate the DOM 
+     * (mostly building lists to display) and some private helper methods.
+     * Note: could be defined as a straightforward object literal like the app object,
+     * but I don't want to forget how to declare a singleton.
+     * @return {Object}
+     */
+    var builders = (function () {
+        /**
+         * Builds an HTML string for a single item in the list of courses/classes
+         * @param  {Course Object} cls
+         * @return {String}
+         */
+        var getCourseListItem = function (cls) {
+            var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
+                "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
+                cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
+                cls.location, "</p><p>", cls.times, "</p></a></li>"];
+            return piecesArr.join("");
+        },
+        /**
+         * Builds HTML string for a single item in the *main* list of tasks
+         * (tab one - all assignments ordered by date)
+         * @param  {Task Object} taskObj
+         * @return {String}
+         */
+        getMainTaskListItem = function (taskObj) {
+            // TODO
+        };
+        return {
+            /**
+             * Rebuilds the jQuery Mobile ListView displayed in the third tab of the
+             * main interface (list of all classes/courses)
+             * @return {undefined}
+             */
+            updateCourseListDom: function () {
+                var id, oneClass, $newBits,
+                    allClasses = courseList.getAllCourses(),
+                    $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
+                $("ul#classList").empty();
+                for (id in allClasses) {
+                    if (allClasses.hasOwnProperty(id)) {
+                        oneClass = allClasses[id];
+                        $newBits = $(getCourseListItem(oneClass));
+                        $("ul#classList").append($newBits);
                     }
-                    $("ul#classList").append($addBtn);
-                    $("#add-new-class-btn").on("click", app.addNewClassHandler);
-                    $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
-                    $("ul#classList").listview("refresh");
-                },
-                updateTaskListDom: function () {
-                    var id, oneTask, $newBits,
-                        allTasks = taskList.getAllTasks(),
-                        $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-task-btn'>Add new task...</a></li>");
-                    $("ul#taskList").empty();
-                    for (id in alltasks) {
-                        if (allTasks.hasOwnProperty(id)) {
-                            oneTask = allTasks[id];
-                            $newBits = $(getTaskListItemHtml(oneTask));
-                            $("ul#taskList").append($newBits);
-                        }
-                    }
-                    $("ul#taskList").append($addBtn);
-                    $("#add-new-task-btn").on("click", app.addNewTaskHandler);
-                    $("ul#taskList").on("click", "li a.task-list-item", app.editTaskHandler);
-                    $("ul#taskList").listview("refresh");
                 }
-            };
-            
-        }())
-
-    };
+                $("ul#classList").append($addBtn);
+                $("#add-new-class-btn").on("click", app.addNewClassHandler);
+                $("ul#classList").on("click", "li a.class-list-item", app.editClassHandler);
+                $("ul#classList").listview("refresh");
+            },
+            /**
+             * Rebuilds the jQuery Mobile ListView displayed in the first tab of the main
+             * interface (list of all assignments ordered by date)
+             * @return {undefined}
+             */
+            updateTaskListDom: function () {
+                var id, oneTask, $newBits,
+                    allTasks = taskList.getAllTasks(),
+                    $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-task-btn'>Add new task...</a></li>");
+                $("ul#taskList").empty();
+                for (id in alltasks) {
+                    if (allTasks.hasOwnProperty(id)) {
+                        oneTask = allTasks[id];
+                        $newBits = $(getTaskListItemHtml(oneTask));
+                        $("ul#taskList").append($newBits);
+                    }
+                }
+                $("ul#taskList").append($addBtn);
+                $("#add-new-task-btn").on("click", app.addNewTaskHandler);
+                $("ul#taskList").on("click", "li a.task-list-item", app.editTaskHandler);
+                $("ul#taskList").listview("refresh");
+            }
+        };    // end builders public methods
+    }());    // end builders singleton
 }(this));   // end everything
