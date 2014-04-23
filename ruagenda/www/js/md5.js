@@ -1,4 +1,4 @@
-/* Creds Joseph Meyer
+/* Creds Joseph Myer
  * http://www.myersdaily.org/joseph/javascript/md5-text.html
  */
 function md5cycle(x, k) {

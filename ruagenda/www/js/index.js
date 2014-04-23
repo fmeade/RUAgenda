@@ -21,11 +21,11 @@
      * @param  {Date} _notify
      * @return {Task Object}
      */
-    function makeAssignment (_title, _course, _desc, _due, _notify) {
+    function makeAssignment (_title, _desc, _course, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
-        that.title = _title;
+        that.name = _title;
         that.course = _course;
         that.desc = _desc;
         that.dueDate = _due;
@@ -239,7 +239,7 @@
                 }
             });
             var result = map.map(function (e) {
-                return list[e.index];
+                return tasks[e.index];
             });
             return result;
         }
@@ -258,7 +258,7 @@
                 }
             }],
             function () {
-                // TODO: update display here
+                builders.updateTaskListDom();
             },
             app.logSqlError
         );
@@ -270,15 +270,17 @@
              * @return {undefined}
              */
             saveTask: function (taskObj) {
+                var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime()),
+                    nd = (taskObj.notifyDate === null ? null : taskObj.notifyDate.getTime());
                 html5sql.process(
                     [{
                         "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, whenNotify) VALUES (?, ?, ?, ?, ?)",
-                        "data": [ taskObj.name, taskObj.course, taskObj.desc, taskObj.dueDate.getTime(), taskObj.notifyDate.getTime() ],
+                        "data": [ taskObj.name, taskObj.course, taskObj.desc, dd, nd ],
                         "success": function (transaction, result) {}
                     }],
                     function () {
                         allTasks[taskObj.id] = taskObj;
-                        // update display here
+                        builders.updateTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -300,7 +302,7 @@
                     }],
                     function () {
                         delete allTasks[taskId];
-                        // update display here
+                        builders.updateTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -585,9 +587,7 @@
             console.log(error);
             console.log(statement);
         },
-        /* DELETE ME LATER!
-         * Creates some sample class rows to query against.
-         */
+        /* these are for debugging, call them from the console */
         makeSampleClasses: function () {
             var someClasses = [
                 makeCourse("ITEC 110", "Principles of Information Technology", "Dr. Htay", "MG 203", "TR 3:30 - 4:45 PM"),
@@ -596,19 +596,31 @@
                 makeCourse("ART 111", "Art Appreciation", "Pop", "Porterfield", "MWF 9 - 9:50 AM")
             ], i = 0, scl = someClasses.length;
             for (i; i < scl; i += 1) {
-                courseList.addCourse(someClasses[i]);
+                courseList.saveCourse(someClasses[i]);
             }
         },
         makeSampleAssignments: function () {
             var someTasks = [
-                makeAssignment("Midterm","SE Midterm","ITEC 370",null,"10 minutes before"),
-                makeAssignment("Final","SE Final","ITEC 370",null,"5 minutes before"),
-                makeAssignment("HW","SE Hw","ITEC 370",null,"15 minutes before"),
-                makeAssignment("Quiz","SE Quiz 2","ITEC 370",null,"7 minutes before"),
+                makeAssignment("Midterm", "SE Midterm", "ITEC 370", new Date(), null),
+                makeAssignment("Final", "SE Final", "ITEC 370", new Date(), null),
+                makeAssignment("HW", "SE Hw", "ITEC 370", new Date(), null),
+                makeAssignment("Quiz", "SE Quiz 2", "ITEC 370", new Date(), null),
             ], i = 0, sTask = someTasks.length;
-            for(i;i < sTask; i += 1) {
-                taskList.addTask(someTasks[i]);
+            for(i; i < sTask; i += 1) {
+                taskList.saveTask(someTasks[i]);
             }
+        },
+        dropTables: function () {
+            html5sql.process(
+                [
+                    "DROP TABLE Classes",
+                    "DROP TABLE Assignments"
+                ],
+                function () {
+                    console.log("dropped all tables");
+                },
+                app.logSqlError
+            );
         }
     }; // end window.app object
     /**
@@ -625,11 +637,11 @@
          * @return {String}
          */
         var getCourseListItem = function (cls) {
-            var piecesArr = ["<li if='", cls.name + "-li", "'><a id='", cls.name,
+            var strPieces = ["<li><a id='", cls.name,
                 "' class='class-list-item' href='#'>", cls.name, "<p><strong>",
                 cls.title, "</strong></p><p>", cls.instructor, "</p><p>",
                 cls.location, "</p><p>", cls.times, "</p></a></li>"];
-            return piecesArr.join("");
+            return strPieces.join("");
         },
         /**
          * Builds HTML string for a single item in the *main* list of tasks
@@ -638,7 +650,13 @@
          * @return {String}
          */
         getMainTaskListItem = function (taskObj) {
-            // TODO
+            var dueDateStr = (taskObj.dueDate === null ? "" : "Due: " + taskObj.dueDate.toDateString()),
+                notifyStr = (taskObj.notifyDate === null ? "(no notify)" : taskObj.notifyDate.toDateString()),
+                strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
+                taskObj.name, "<p>", taskObj.desc, "<br />", notifyStr,
+                "</p><p class='ui-li-aside'>", taskObj.course, "<br />",
+                dueDateStr, "</p></a></li>"];
+            return strPieces.join("");
         };
         return {
             /**
@@ -670,20 +688,17 @@
              */
             updateTaskListDom: function () {
                 var id, oneTask, $newBits,
-                    allTasks = taskList.getAllTasks(),
-                    $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-task-btn'>Add new task...</a></li>");
-                $("ul#taskList").empty();
-                for (id in alltasks) {
+                    allTasks = taskList.getAllByDate();
+                $("ul#mainTaskList").empty();
+                for (id in allTasks) {
                     if (allTasks.hasOwnProperty(id)) {
                         oneTask = allTasks[id];
-                        $newBits = $(getTaskListItemHtml(oneTask));
-                        $("ul#taskList").append($newBits);
+                        $newBits = $(getMainTaskListItem(oneTask));
+                        $("ul#mainTaskList").append($newBits);
                     }
                 }
-                $("ul#taskList").append($addBtn);
-                $("#add-new-task-btn").on("click", app.addNewTaskHandler);
-                $("ul#taskList").on("click", "li a.task-list-item", app.editTaskHandler);
-                $("ul#taskList").listview("refresh");
+                $("ul#mainTaskList").on("click", "li a.task-list-item", app.editTaskHandler);
+                $("ul#mainTaskList").listview("refresh");
             }
         };    // end builders public methods
     }());    // end builders singleton
