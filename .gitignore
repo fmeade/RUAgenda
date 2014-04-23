@@ -10,14 +10,10 @@
 # Java class files
 *.class
 
-# generated files - android project subfolder
-ruagenda/platforms/android/bin/**
-ruagenda/platforms/android/gen/**
-ruagenda/platforms/android/assets/**
-
 # generated files
 bin/
 gen/
+ruagenda/platforms/android/assets/
 
 # Local configuration file (sdk path, etc)
 local.properties
