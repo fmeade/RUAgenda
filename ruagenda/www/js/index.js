@@ -10,7 +10,17 @@
     /* yes please */
     'use strict';
     var courseList, // object holds list of courses and manages 'Classes' table in db
-        taskList;   // " " " " assignments and manages 'Assignments' table in db
+        taskList,   // " " " " assignments and manages 'Assignments' table in db
+        notifyCodes = { // static codes used to generate notification dates
+        "7d": 604800000,
+        "3d": 259200000,
+        "1d": 86400000,
+        "12h": 43200000,
+        "6h": 21600000,
+        "3h": 10800000,
+        "1h": 3600000,
+        "30m": 1800000
+    };
     /**
      * Constructor for a single assignment (a.k.a. task) object
      * Invoked w/out the 'new' keyword: `var taskObj = makeAssignment(...);`
@@ -54,6 +64,26 @@
         that.times = _times;
 
         return that;
+    }
+    /**
+     * Creates a date object for a task notification date by comparing
+     * the provided due date and notification diff code (e.g. 7d -> 7 days prior)
+     * @param  {Date} due  Due date object (can be null)
+     * @param  {String} code indicates user notification selection
+     * @return {Date}      Date object representing when a notification should occur
+     */
+    function notifyDate (due, code) {
+        var dueMs, notifyMs;
+        if (due === null || code === "none") {
+            return null;
+        }
+        dueMs = due.getTime();
+        notifyMs = notifyCodes[code];
+        if (notifyMs === undefined) {
+            return null;
+        }
+
+        return new Date(dueMs - notifyMs);
     }
     /**
      * Used to initialize the 'courseList' object.
@@ -225,13 +255,14 @@
          */
         function sortByDate (tasks) {
             var map = tasks.map(function (e, i) {
-                return { index: i, value: e.dueDate.getTime() };
+                return { index: i, value: (e.dueDate === null ? 0 : e.dueDate.getTime()) };
             });
             map.sort(function (a, b) {
-                if (a < b) {
+                var av = a.value, bv = b.value;
+                if (av < bv) {
                     return -1;
                 }
-                else if (a > b) {
+                else if (av > bv) {
                     return 1;
                 }
                 else {
@@ -249,10 +280,12 @@
                 "sql": "SELECT name, course, description, dueDate, whenNotify FROM Assignments",
                 "data": [],
                 "success": function (transaction, result) {
-                    var i = 0, rl = result.rows.length, r, oneTask;
+                    var i = 0, rl = result.rows.length, r, oneTask, due, notify;
                     for (i; i < rl; i += 1) {
                         r = result.rows.item(i);
-                        oneTask = makeAssignment(r.name, r.course, r.description, new Date(r.dueDate), new Date(r.whenNotify));
+                        due = (r.dueDate === null ? null : new Date(r.dueDate));
+                        notify = (r.whenNotify === null ? null : new Date(r.whenNotify));
+                        oneTask = makeAssignment(r.name, r.course, r.description, due, notify);
                         allTasks[oneTask.id] = oneTask;
                     }
                 }
@@ -270,7 +303,7 @@
              * @return {undefined}
              */
             saveTask: function (taskObj) {
-                var dd = (taskObj.dueDate === null ? new Date() : taskObj.dueDate.getTime()),
+                var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime()),
                     nd = (taskObj.notifyDate === null ? null : taskObj.notifyDate.getTime());
                 html5sql.process(
                     [{
@@ -520,6 +553,8 @@
             $("#edit-task-delete").hide();
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
+            // update the class options
+            builders.updateCourseDropdown();
             // now open the popup
             $("#edit-task").popup("open");
         },
@@ -540,6 +575,8 @@
             // set handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
+            // update the class options
+            builders.updateCourseDropdown();
             // now open the popup
             $("#edit-task").popup("open");
         },
@@ -553,12 +590,14 @@
             $("#edit-task").popup("close");
         },
         taskPopupSaveBtnHandler: function () {
+            var due = $("#tdue").datepicker( "getDate" ),
+                notify = notifyDate(due, $("#tnotify").val());
             var section = makeAssignment(
-                $("#edit-task-name").val(),
-                $("#edit-task-description").val(),
-                $("#edit-task-course").val(),
-                $("#edit-task-dueDate").val(),
-                $("#edit-task-notifyDate").val()
+                $("#tname").val(),
+                $("#tdesc").val(),
+                $("#tcourse").val(),
+                due,
+                notify
             );
             /* rudimentary opaque validation, no empty task names allowed */
             if (section.name !== "") {
@@ -644,6 +683,15 @@
                 "</p><p class='ui-li-aside'>", taskObj.course, "<br />",
                 dueDateStr, "</p></a></li>"];
             return strPieces.join("");
+        },
+        /**
+         * Returns raw html for one select option 
+         * @param  {string} cid the course id for the option element
+         * @return {string}     html for single select option, value and text = cid
+         */
+        getCourseOptionHtml = function (cid) {
+            var pieces = ["<option value='", cid, "'>", cid, "</option>"];
+            return pieces.join("");
         };
         return {
             /**
@@ -686,6 +734,22 @@
                 }
                 $("ul#mainTaskList").on("click", "li a.task-list-item", app.editTaskHandler);
                 $("ul#mainTaskList").listview("refresh");
+            },
+            /**
+             * Updates the course select options in the new/edit task popup
+             * @return {undefined}
+             */
+            updateCourseDropdown: function () {
+                var opts, len, i;
+                opts = courseList.getCourseIds();
+                len = opts.length;
+                i = 0;
+                $("select#tcourse").empty();
+                for (i; i < len; i += 1) {
+                    $("select#tcourse").append($(getCourseOptionHtml(opts[i])));
+                }
+                $("select#tcourse option:first").attr("selected", "selected");
+                $("select#tcourse").selectmenu("refresh");
             }
         };    // end builders public methods
     }());    // end builders singleton

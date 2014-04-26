@@ -69,20 +69,31 @@
                 <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-back ui-btn-icon-notext ui-btn-right">Close</a>
                 <form><fieldset>
                     <h3></h3>
-                    <label for="name" class="ui-accessible">Assignment Name:</label>
-                    <input type="text" name="edit-task-name" id="an" placeholder="Ex: Test 2" value="">
+                    <label for="tname" class="ui-accessible">Assignment Name:</label>
+                    <input type="text" name="edit-task-name" id="tname" placeholder="Ex: Test 2" value="">
 
-                    <label for="description" class="ui-accessible">Description:</label>
-                    <input type="text" name="edit-task-description" id="desc" placeholder="Ex: Test on Recursion" value="">
+                    <label for="tdesc" class="ui-accessible">Description:</label>
+                    <input type="text" name="edit-task-description" id="tdesc" placeholder="Ex: Test on Recursion" value="">
 
-                    <label for="course" class="ui-accessible">Class:</label>
-                    <input type="text" name="edit-task-class" id="course" placeholder="Ex: ITEC 220" value=""> 
+                    <label for="tcourse" class="ui-accessible">Class:</label>
+                    <select name="tcourse" id="tcourse" data-inline="false">
+                    </select>
 
-                    <label for="due" class="ui-accessible">Due Date:</label>
-                    <input type="text" class="date-input" data-inline="false" data-role="date" id="due" />
+                    <label for="tdue" class="ui-accessible">Due Date:</label>
+                    <input type="text" class="date-input" data-inline="false" data-role="date" id="tdue" />
 
-                    <label for="notify" class="ui-accessible">Notification:</label>
-                    <input type="text" name="edit-task-notify" id="notify" placeholder="Ex: 10 minutes before" value="">
+                    <label for="tnotify" class="ui-accessible select">Notification:</label>
+                    <select name="tnotify" id="tnotify" data-inline="false">
+                        <option value="none">none</option>
+                        <option value="7d">1 week</option>
+                        <option value="3d">3 days</option>
+                        <option value="1d">1 day</option>
+                        <option value="12h">12 hours</option>
+                        <option value="6h">6 hours</option>
+                        <option value="3h">3 hours</option>
+                        <option value="1h">1 hours</option>
+                        <option value="30m">30 minutes</option>
+                    </select>
 
                     <a href="#" id="edit-task-delete" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-delete">Delete</a>
                     <a href="#" id="edit-task-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
@@ -192,9 +203,6 @@
 
             </div><!--/tabs-->
 
-            <div data-role="footer" data-position="fixed">
-                <h5 class="ui-corner-all">Developed by Bowtie Code</h5>
-            </div>
         </div><!-- /page -->
 
         <!-- page-specific js -->
