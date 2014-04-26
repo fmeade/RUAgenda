@@ -405,6 +405,9 @@
             $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
+            $("#add-new-task-btn").on("click", app.taskPopupAddBtnHandler);
+            $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
+            $("#edit-task-delete").on("click", app.taskPopupDeleteHandler);
         },
         /**
          * Initializes the local storage database.
@@ -463,7 +466,7 @@
             // disable editing the name/id of the class (it's the key)
             $("#edit-class-id").prop("disabled", true);
             // set the 'legend' text
-            $("div#edit-class h3").text("Edit class details");
+            $("div#edit-class h3").text("Edit class");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
             cls = courseList.getCourse(lid);
@@ -515,9 +518,9 @@
             // hide the delete/remove button
             $("#edit-task-delete").hide();
             // enable the class title field
-            $("#edit-task-id").prop("disabled", false);
+            // $("#edit-task-id").prop("disabled", false);
             // set the 'legend' text
-            $("div#edit-task h3").text("Add a new class");
+            $("div#edit-task h3").text("Add a new Assignment");
             // set handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupAddBtnHandler);
@@ -531,7 +534,7 @@
             // disable editing the name/id of the class (it's the key)
             $("#edit-task-id").prop("disabled", true);
             // set the 'legend' text
-            $("div#edit-task h3").text("Edit class details");
+            $("div#edit-task h3").text("Edit Assignment");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
             task = taskList.getAssignment(id);
@@ -556,18 +559,8 @@
             $("#edit-task").popup("close");
         },
         taskPopupAddBtnHandler: function () {
-            var section = makeAssignment(
-                $("#edit-task-title").val(),  // text
-                $("#edit-task-description").val(), // text area
-                $("#edit-task-class").val(), // drop down
-                $("#edit-task-due").val(),   // datepicker
-                $("#edit-task-notifyDate").val() // drop down
-            );
-            /* rudimentary opaque validation, no empty class names */
-            if (section.name !== "") {
-                taskList.addTask(section);
-            }
-            $("#edit-task").popup("close");
+            $("#task-edit").popup("open");
+            
         },
         taskPopupEditBtnHandler: function () {
             taskList.editTask(
@@ -667,7 +660,7 @@
             updateCourseListDom: function () {
                 var id, oneClass, $newBits,
                     allClasses = courseList.getAllCourses(),
-                    $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add new class...</a></li>");
+                    $addBtn = $("<li data-icon='plus'><a href='#' id='add-new-class-btn'>Add a new class</a></li>");
                 $("ul#classList").empty();
                 for (id in allClasses) {
                     if (allClasses.hasOwnProperty(id)) {
