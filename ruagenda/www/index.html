@@ -60,41 +60,30 @@
             
             
             
-            <!-- PROBABLY USELESS detail view popup for one assignment -->
-            <div data-role="popup" id="task-detail" class="ui-content" data-overlay-theme="a">
-                <form>
-                    <h3>Edit Assignment</h3>
-                    <label for="name" class="ui-accessible">Assignment Name:</label>
-                    <input type="text" name="title" id="an" value="">
-                    <label for="description" class="ui-accessible">Description:</label>
-                    <input type="text" name="description" id="des" value="">
-                    <label for="class" class="ui-accessible">Class:</label>
-                    <input type="text" name="class" id="class" value="">
-                    <label for="due" class="ui-accessible">Due Date:</label>
-                    <input type="text" name="duedate" id="due" value="">
-                    <label for="notify" class="ui-accessible">Notify Me:</label>
-                    <input type="text" name="notify" id="notify" value="">
-                </form>
-            </div><!-- end popup task detail -->
-            
-            
-            
             <!-- Assignment detail popup (new OR edit) -->
-            <div data-role="popup" id="task-edit" class="ui-content" data-overlay-theme="a">
-                <form>
-                    <h3>Add Assignment</h3>
+            <div data-role="popup" id="edit-task" class="ui-content" data-overlay-theme="a">
+                <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-back ui-btn-icon-notext ui-btn-right">Close</a>
+                <form><fieldset>
+                    <h3></h3>
                     <label for="name" class="ui-accessible">Assignment Name:</label>
-                    <input type="text" name="task-edit-name" id="an" placeholder="Name of Assignment" value="">
+                    <input type="text" name="edit-task-name" id="an" placeholder="Ex: Test 2" value="">
+
                     <label for="description" class="ui-accessible">Description:</label>
-                    <input type="text" name="task-edit-description" id="des" placeholder="Description" value="">
-                    <label for="class" class="ui-accessible">Class:</label>
-                    <input type="text" name="task-edit-class" id="class" placeholder="Class ID" value=""> 
+                    <input type="text" name="edit-task-description" id="desc" placeholder="Ex: Test on Recursion" value="">
+
+                    <label for="course" class="ui-accessible">Class:</label>
+                    <input type="text" name="edit-task-class" id="course" placeholder="Ex: ITEC 220" value=""> 
+
                     <label for="due" class="ui-accessible">Due Date:</label>
-                    <input type="text" name="task-edit-duedate" id="due" placeholder="When is it due?" value="">
+                    <input type="text" name="edit-task-duedate" id="due" placeholder="Ex: M 11 AM" value="">
+
                     <label for="notify" class="ui-accessible">Notification:</label>
-                    <input type="text" name="task-edit-notify" id="notify" placeholder="Notify me..." value="">
-                </form>
-            </div><!-- end popup task edit -->
+                    <input type="text" name="edit-task-notify" id="notify" placeholder="Ex: 10 minutes before" value="">
+
+                    <a href="#" id="edit-task-delete" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-delete">Delete</a>
+                    <a href="#" id="edit-task-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
+                </fieldset></form>
+            </div><!-- end edit-task popup -->
             
             
             
@@ -104,30 +93,30 @@
                 <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-back ui-btn-icon-notext ui-btn-right">Close</a>
                 <form><fieldset>
                     <h3></h3>
-                    <label for="edit-class-id" class="ui-hidden-accessible">Class name</label>
+                    <label for="edit-class-id" class="">Class name:</label>
                     <input type="text" name="edit-class-id" id="edit-class-id" 
-                        placeholder="Class id (ex: ITEC 120)" value="" />
+                        placeholder="Ex: ITEC 220" value="" />
                     
-                    <label for="edit-class-title" class="ui-hidden-accessible">Class title</label>
+                    <label for="edit-class-title" class="">Class title:</label>
                     <input type="text" name="edit-class-title" id="edit-class-title" 
-                        placeholder="Class title (ex: Geology...)" value="" />
+                        placeholder="Ex: Computer Science II" value="" />
                     
-                    <label for="edit-class-who" class="ui-hidden-accessible">Professor</label>
+                    <label for="edit-class-who" class="">Professor:</label>
                     <input type="text" name="edit-class-who" id="edit-class-who" 
-                        placeholder="Instructor/Professor" value="" />
+                        placeholder="Ex: Dr. Chase" value="" />
                     
-                    <label for="edit-class-when" class="ui-hidden-accessible">Meeting times</label>
+                    <label for="edit-class-when" class="">Meeting times:</label>
                     <input type="text" name="edit-class-when" id="edit-class-when" 
-                        placeholder="Meeting times" value="" />
+                        placeholder="Ex: MWF 11-11:50 AM" value="" />
                     
-                    <label for="edit-class-where" class="ui-hidden-accessible">Class name</label>
+                    <label for="edit-class-where" class="">Location:</label>
                     <input type="text" name="edit-class-where" id="edit-class-where" 
-                        placeholder="Location" value="" />
+                        placeholder="Ex: DA 225" value="" />
                     
                     <a href="#" id="edit-class-delete" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-delete">Delete</a>
                     <a href="#" id="edit-class-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
                 </fieldset></form>
-            </div> <!--/edit-class popup-->
+            </div> <!-- end edit-class popup-->
  
  
  

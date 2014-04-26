@@ -21,16 +21,16 @@
      * @param  {Date} _notify
      * @return {Task Object}
      */
-    function makeAssignment (_title, _desc, _course, _due, _notify) {
+    function makeAssignment (_name, _desc, _course, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
-        that.name = _title;
+        that.name = _name;
         that.course = _course;
         that.desc = _desc;
         that.dueDate = _due;
         that.notifyDate = _notify;
-        that.id = md5(_title + "-" + _course);  // unique id by hashing the title and course together
+        that.id = md5(_name + "-" + _course);  // unique id by hashing the title and course together
         // return the extended object
         return that;
     }
@@ -405,9 +405,10 @@
             $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
-            $("#add-new-task-btn").on("click", app.taskPopupAddBtnHandler);
+            $("#add-new-task-btn").on("click", app.addNewTaskHandler);
+            $("#edit-task").on("popupafterclose", this.taskPopupOnCloseHandler);
+            $("#edit-task-delete").on("click", this.taskPopupOnDeleteHandler);
             $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
-            $("#edit-task-delete").on("click", app.taskPopupDeleteHandler);
         },
         /**
          * Initializes the local storage database.
@@ -517,13 +518,8 @@
         addNewTaskHandler: function () {
             // hide the delete/remove button
             $("#edit-task-delete").hide();
-            // enable the class title field
-            // $("#edit-task-id").prop("disabled", false);
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
-            // set handler
-            $("#edit-task-save").off("click");
-            $("#edit-task-save").on("click", app.taskPopupAddBtnHandler);
             // now open the popup
             $("#edit-task").popup("open");
         },
@@ -531,21 +527,19 @@
             var lid, task;
             // show the delete/remove button
             $("#edit-task-delete").show();
-            // disable editing the name/id of the class (it's the key)
-            $("#edit-task-id").prop("disabled", true);
             // set the 'legend' text
             $("div#edit-task h3").text("Edit Assignment");
             // need to pre-populate the form w/ values
             lid = event.currentTarget.id;
-            task = taskList.getAssignment(id);
-            $("#edit-task-title").val(task.title);
-            $("#edit-task-description").val(task.description);
-            $("#edit-task-class").val(task.class);
-            $("#edit-task-dueDate").val(task.dueDate);
-            $("#edit-task-notifyDate").val(task.notifyDate);
+            task = taskList.getAssignment(lid);
+            $("#edit-task-name").val(task.name);
+            $("#edit-task-description").val(task.desc);
+            $("#edit-task-course").val(task.course);
+            $("#edit-task-due").val(task.dueDate);
+            $("#edit-task-notify").val(task.notifyDate);
             // set handler
             $("#edit-task-save").off("click");
-            $("#edit-task-save").on("click", app.classPopupEditBtnHandler);
+            $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
             // now open the popup
             $("#edit-task").popup("open");
         },
@@ -558,19 +552,19 @@
 
             $("#edit-task").popup("close");
         },
-        taskPopupAddBtnHandler: function () {
-            $("#task-edit").popup("open");
-            
-        },
-        taskPopupEditBtnHandler: function () {
-            taskList.editTask(
-                $("#edit-task-title").val(),  // text
-                $("#edit-task-description").val(), // text area
-                $("#edit-task-class").val(), // drop down
-                $("#edit-task-due").val(),   // datepicker
-                $("#edit-task-notifyDate").val() // drop down
+        taskPopupSaveBtnHandler: function () {
+            var section = makeAssignment(
+                $("#edit-task-name").val(),
+                $("#edit-task-description").val(),
+                $("#edit-task-course").val(),
+                $("#edit-task-dueDate").val(),
+                $("#edit-task-notifyDate").val()
             );
-            $("#edit-class").popup("close");
+            /* rudimentary opaque validation, no empty task names allowed */
+            if (section.name !== "") {
+                taskList.saveTask(section);
+            }
+            $("#edit-task").popup("close");
         },
         taskPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-task :text").val("");
