@@ -270,7 +270,7 @@
              * @return {undefined}
              */
             saveTask: function (taskObj) {
-                var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime()),
+                var dd = (taskObj.dueDate === null ? new Date() : taskObj.dueDate.getTime()),
                     nd = (taskObj.notifyDate === null ? null : taskObj.notifyDate.getTime());
                 html5sql.process(
                     [{
@@ -406,8 +406,8 @@
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
             $("#add-new-task-btn").on("click", app.addNewTaskHandler);
-            $("#edit-task").on("popupafterclose", this.taskPopupOnCloseHandler);
-            $("#edit-task-delete").on("click", this.taskPopupOnDeleteHandler);
+            $("#edit-task").on("popupafterclose", app.taskPopupOnCloseHandler);
+            $("#edit-task-delete").on("click", app.taskPopupOnDeleteHandler);
             $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
         },
         /**
