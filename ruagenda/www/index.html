@@ -57,7 +57,7 @@
             <div data-role="popup" id="popup-menu" class="popupParent">
                 <ul data-role="listview" data-inset="false">
                     <li><a href='#'>Download Schedule</a></li>
-                    <li><a href="#">Reset Everything</a></li>
+                    <li><a href="#" id="delete-everything">Reset Everything</a></li>
                     <li><a href="#">Notification Toggle</a></li>
                 </ul>
             </div><!-- end popup menu -->
@@ -164,7 +164,7 @@
                     
                     <ul data-role="listview" data-icon="edit" id="mainTaskList"
                         data-filter="true" data-filter-placeholder="Filter assignments..." >
-                        <!-- auto-generated.  yay! -->
+                        <!-- auto-generated. -->
                     </ul>
                     
                 </div>
@@ -173,6 +173,12 @@
 
                 <!-- second tab content here -->
                 <div id="two" class="ui-content">
+
+                    <!-- Dropdown for each class containing their assignments -->
+                    <ul data-role="listview" data-icon="edit" id="classTaskList"
+                        data-filter="true" data-filter-placeholder="Search" >
+                        <!-- auto-generated. -->
+                    </ul>
 
                     <!-- TODO: Inset inner list view -->
                     <div data-role="collapsible" data-inset="false"
@@ -196,7 +202,7 @@
                 <!-- third tab content here -->
                 <div id="three" class="ui-body-d ui-content">
                     <ul data-role="listview" id="classList" data-icon="edit">
-                        <!-- data-generated.  yay! -->
+                        <!-- data-generated. -->
                         <li data-icon='plus'><a href='#' id='add-new-class-btn'>Add a new class</a></li>
                     </ul>
                 </div><!--/three-->

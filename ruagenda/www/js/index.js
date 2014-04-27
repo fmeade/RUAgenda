@@ -18,7 +18,7 @@
         "12h": {display: "12 hours", ms: 43200000},
         "6h": {display: "6 hours", ms: 21600000},
         "3h": {display: "3 hours", ms: 10800000},
-        "1h": {display: "1 hours", ms: 3600000},
+        "1h": {display: "1 hour", ms: 3600000},
         "30m": {display: "30 minutes", ms: 1800000},
         "none": {display: "(no notify)", ms: undefined}
     };
@@ -443,12 +443,14 @@
          * @return {undefined}
          */
         bindEvents: function () {
-            document.addEventListener('deviceready', this.onDeviceReady, false);
+            document.addEventListener('deviceready', app.onDeviceReady, false);
+            // bind for deleting everything
+            $("#delete-everything").on("click",app.dropTables);
+            $("#delete-everything").on("click",app.onDeviceReady);
             // TODO: these events only need to be bound after db init?
-            $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
-            $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
+            $("#edit-class").on("popupafterclose", app.classPopupOnCloseHandler);
+            $("#edit-class-delete").on("click", app.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
-            
             $("#add-new-task-btn").on("click", app.addNewTaskHandler);
             $("#edit-task").on("popupafterclose", app.taskPopupOnCloseHandler);
             $("#edit-task-delete").on("click", app.taskPopupDeleteHandler);
@@ -568,7 +570,7 @@
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
             $("#edit-task-name").text("");
-            $("#edit-task-desc").text("");
+            $("#edit-task-description").text("");
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
