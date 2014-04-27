@@ -32,13 +32,13 @@
      * @param  {String} _notify
      * @return {Task Object}
      */
-    function makeAssignment (_name, _course, _desc, _due, _notify) {
+    function makeAssignment (_name, _desc,_course, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
         that.name = _name;
-        that.course = _course;
         that.desc = _desc;
+        that.course = _course;
         that.dueDate = _due;
         that.notifyCode = (_due === null ? "none" : _notify);
         that.notifyDate = (_due === null ? null : makeNotifyDate(_due, _notify));
@@ -308,7 +308,7 @@
                 html5sql.process(
                     [{
                         "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, notifyCode) VALUES (?, ?, ?, ?, ?)",
-                        "data": [ taskObj.name, taskObj.course, taskObj.desc, dd, taskObj.notifyCode ],
+                        "data": [ taskObj.name, taskObj.desc,taskObj.course, dd, taskObj.notifyCode ],
                         "success": function (transaction, result) {}
                     }],
                     function () {
