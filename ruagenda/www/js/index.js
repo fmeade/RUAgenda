@@ -279,14 +279,14 @@
         // this call initializes the allTasks object map from the db
         html5sql.process(
             [{
-                "sql": "SELECT name, course, description, dueDate, notifyCode FROM Assignments",
+                "sql": "SELECT name, description, course, dueDate, notifyCode FROM Assignments",
                 "data": [],
                 "success": function (transaction, result) {
                     var i = 0, rl = result.rows.length, r, oneTask, due, notify;
                     for (i; i < rl; i += 1) {
                         r = result.rows.item(i);
                         due = (r.dueDate === null ? null : new Date(r.dueDate));
-                        oneTask = makeAssignment(r.name, r.course, r.description, due, r.notifyCode);
+                        oneTask = makeAssignment(r.name, r.description, r.course, due, r.notifyCode);
                         allTasks[oneTask.id] = oneTask;
                     }
                 }
@@ -307,8 +307,8 @@
                 var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime());
                 html5sql.process(
                     [{
-                        "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, notifyCode) VALUES (?, ?, ?, ?, ?)",
-                        "data": [ taskObj.name, taskObj.desc,taskObj.course, dd, taskObj.notifyCode ],
+                        "sql": "INSERT OR REPLACE INTO Assignments (name, description, course, dueDate, notifyCode) VALUES (?, ?, ?, ?, ?)",
+                        "data": [ taskObj.name, taskObj.desc, taskObj.course, dd, taskObj.notifyCode ],
                         "success": function (transaction, result) {}
                     }],
                     function () {
@@ -567,6 +567,8 @@
             $("#edit-task-delete").hide();
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
+            $("#edit-task-name").text("");
+            $("#edit-task-desc").text("");
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
@@ -657,10 +659,10 @@
         },
         makeSampleAssignments: function () {
             var someTasks = [
-                makeAssignment("p1", "ITEC 110", "Programming assignment 1", new Date(), "none"),
-                makeAssignment("Homework 2", "MATH 151", "Chapter 3 problems 15-30", new Date(), "none"),
-                makeAssignment("paint", "ART 111", "finish masterpiece", new Date(), "none"),
-                makeAssignment("Quiz", "MATH 151", "Quiz on chapter 3", new Date(), "none"),
+                makeAssignment("p1", "Programming assignment 1", "ITEC 110", new Date(), "none"),
+                makeAssignment("Homework 2", "Chapter 3 problems 15-30", "MATH 151", new Date(), "none"),
+                makeAssignment("paint", "finish masterpiece", "ART 111", new Date(), "none"),
+                makeAssignment("Quiz", "Quiz on chapter 3", "MATH 151", new Date(), "none"),
             ], i = 0, sTask = someTasks.length;
             for(i; i < sTask; i += 1) {
                 taskList.addTask(someTasks[i]);
@@ -710,8 +712,8 @@
                 notifyDateStr = (taskObj.notifyDate === null ? "" : taskObj.notifyDate.toDateString()),
                 notifyStr =  notifyCodes[taskObj.notifyCode].display,
                 strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
-                    taskObj.name, "<p>", taskObj.desc, "<br />", dueDateStr,
-                    "</p><p class='ui-li-aside'>", taskObj.course, "<br />",
+                    taskObj.name, "<p>", taskObj.course, "<br />", dueDateStr,
+                    "</p><p class='ui-li-aside'>", taskObj.desc, "<br />",
                     notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
