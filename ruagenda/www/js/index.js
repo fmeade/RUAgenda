@@ -12,14 +12,15 @@
     var courseList, // object holds list of courses and manages 'Classes' table in db
         taskList,   // " " " " assignments and manages 'Assignments' table in db
         notifyCodes = { // static codes used to generate notification dates
-        "7d": 604800000,
-        "3d": 259200000,
-        "1d": 86400000,
-        "12h": 43200000,
-        "6h": 21600000,
-        "3h": 10800000,
-        "1h": 3600000,
-        "30m": 1800000
+        "7d": {display: "1 week", ms: 604800000},
+        "3d": {display: "3 days", ms: 259200000},
+        "1d": {display: "1 day", ms: 86400000},
+        "12h": {display: "12 hours", ms: 43200000},
+        "6h": {display: "6 hours", ms: 21600000},
+        "3h": {display: "3 hours", ms: 10800000},
+        "1h": {display: "1 hours", ms: 3600000},
+        "30m": {display: "30 minutes", ms: 1800000},
+        "none": {display: "(no notify)", ms: undefined}
     };
     /**
      * Constructor for a single assignment (a.k.a. task) object
@@ -28,10 +29,10 @@
      * @param  {string} _course
      * @param  {string} _desc
      * @param  {Date} _due
-     * @param  {Date} _notify
+     * @param  {String} _notify
      * @return {Task Object}
      */
-    function makeAssignment (_name, _desc, _course, _due, _notify) {
+    function makeAssignment (_name, _course, _desc, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
@@ -39,7 +40,8 @@
         that.course = _course;
         that.desc = _desc;
         that.dueDate = _due;
-        that.notifyDate = _notify;
+        that.notifyCode = (_due === null ? "none" : _notify);
+        that.notifyDate = (_due === null ? null : makeNotifyDate(_due, _notify));
         that.id = md5(_name + "-" + _course);  // unique id by hashing the title and course together
         // return the extended object
         return that;
@@ -72,17 +74,17 @@
      * @param  {String} code indicates user notification selection
      * @return {Date}      Date object representing when a notification should occur
      */
-    function notifyDate (due, code) {
+    function makeNotifyDate (due, code) {
         var dueMs, notifyMs;
-        if (due === null || code === "none") {
+        if (due === null || due === undefined ||
+            code === null || code === undefined) {
             return null;
         }
         dueMs = due.getTime();
-        notifyMs = notifyCodes[code];
+        notifyMs = notifyCodes[code].ms;
         if (notifyMs === undefined) {
             return null;
         }
-
         return new Date(dueMs - notifyMs);
     }
     /**
@@ -277,15 +279,14 @@
         // this call initializes the allTasks object map from the db
         html5sql.process(
             [{
-                "sql": "SELECT name, course, description, dueDate, whenNotify FROM Assignments",
+                "sql": "SELECT name, course, description, dueDate, notifyCode FROM Assignments",
                 "data": [],
                 "success": function (transaction, result) {
                     var i = 0, rl = result.rows.length, r, oneTask, due, notify;
                     for (i; i < rl; i += 1) {
                         r = result.rows.item(i);
                         due = (r.dueDate === null ? null : new Date(r.dueDate));
-                        notify = (r.whenNotify === null ? null : new Date(r.whenNotify));
-                        oneTask = makeAssignment(r.name, r.course, r.description, due, notify);
+                        oneTask = makeAssignment(r.name, r.course, r.description, due, r.notifyCode);
                         allTasks[oneTask.id] = oneTask;
                     }
                 }
@@ -298,17 +299,16 @@
         // returning public methods in an object literal
         return {
             /**
-             * Saves new or replaces existing task/assignment
+             * Saves new task/assignment
              * @param  {Task Object} taskObj
              * @return {undefined}
              */
-            saveTask: function (taskObj) {
-                var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime()),
-                    nd = (taskObj.notifyDate === null ? null : taskObj.notifyDate.getTime());
+            addTask: function (taskObj) {
+                var dd = (taskObj.dueDate === null ? null : taskObj.dueDate.getTime());
                 html5sql.process(
                     [{
-                        "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, whenNotify) VALUES (?, ?, ?, ?, ?)",
-                        "data": [ taskObj.name, taskObj.course, taskObj.desc, dd, nd ],
+                        "sql": "INSERT OR REPLACE INTO Assignments (name, course, description, dueDate, notifyCode) VALUES (?, ?, ?, ?, ?)",
+                        "data": [ taskObj.name, taskObj.course, taskObj.desc, dd, taskObj.notifyCode ],
                         "success": function (transaction, result) {}
                     }],
                     function () {
@@ -317,6 +317,16 @@
                     },
                     app.logSqlError
                 );
+            },
+            /**
+             * Edits an existing task be taking the old id, deleting it, then adding a new object
+             * @param  {string} oldId       id of task to replace
+             * @param  {taskObj} replacement new task to put in place
+             * @return {undefined}
+             */
+            editTask: function (oldId, replacement) {
+                this.deleteTask(oldId);
+                this.addTask(replacement);
             },
             /**
              * Removes a task from list and database
@@ -438,10 +448,10 @@
             $("#edit-class").on("popupafterclose", this.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", this.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
+            
             $("#add-new-task-btn").on("click", app.addNewTaskHandler);
             $("#edit-task").on("popupafterclose", app.taskPopupOnCloseHandler);
-            $("#edit-task-delete").on("click", app.taskPopupOnDeleteHandler);
-            $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
+            $("#edit-task-delete").on("click", app.taskPopupDeleteHandler);
         },
         /**
          * Initializes the local storage database.
@@ -454,7 +464,7 @@
             html5sql.process(
                 [
                     "CREATE TABLE IF NOT EXISTS Classes ( cname TEXT PRIMARY KEY NOT NULL, ctitle TEXT DEFAULT '' NOT NULL, instructor TEXT, location TEXT, times TEXT );",
-                    "CREATE TABLE IF NOT EXISTS Assignments ( name TEXT NOT NULL, course TEXT NOT NULL REFERENCES Classes(cname), description TEXT DEFAULT '', dueDate INTEGER, whenNotify INTEGER, CONSTRAINT task_class_pk PRIMARY KEY(name, course));"
+                    "CREATE TABLE IF NOT EXISTS Assignments ( name TEXT NOT NULL, course TEXT NOT NULL REFERENCES Classes(cname), description TEXT DEFAULT '', dueDate INTEGER, notifyCode TEXT, CONSTRAINT task_class_pk PRIMARY KEY(name, course));"
                 ],
                 function () {
                     console.log("Initialized local database tables");
@@ -471,6 +481,10 @@
          */
         onDeviceReady: function () {
             app.initializeLDB();
+            $("#tdue").datepicker("option", "showAnim", "");
+            // i don't know why this is has to be here... but wierd things happen without it.
+            $("#tdue").datepicker("show");
+            $("#tdue").datepicker("hide");
         },
         /**
          * Bound to the onclick event for the "Add new class" item at the
@@ -553,6 +567,9 @@
             $("#edit-task-delete").hide();
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
+            // set save handler
+            $("#edit-task-save").off("click");
+            $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
             // update the class options
             builders.updateCourseDropdown();
             // now open the popup
@@ -564,49 +581,62 @@
             $("#edit-task-delete").show();
             // set the 'legend' text
             $("div#edit-task h3").text("Edit Assignment");
-            // need to pre-populate the form w/ values
-            lid = event.currentTarget.id;
-            task = taskList.getAssignment(lid);
-            $("#edit-task-name").val(task.name);
-            $("#edit-task-description").val(task.desc);
-            $("#edit-task-course").val(task.course);
-            $("#edit-task-due").val(task.dueDate);
-            $("#edit-task-notify").val(task.notifyDate);
-            // set handler
+            // set save handler
             $("#edit-task-save").off("click");
-            $("#edit-task-save").on("click", app.taskPopupSaveBtnHandler);
+            $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenEdit);
             // update the class options
             builders.updateCourseDropdown();
+            // need to pre-populate the form w/ values
+            lid = event.currentTarget.id;
+            task = taskList.getTask(lid);
+            $("#edit-task-id").val(lid);
+            $("#tname").val(task.name);
+            $("#tdesc").val(task.desc);
+            $("select#tcourse option[value='" + task.course + "']").attr("selected", "selected");
+            $("#tdue").datepicker("setDate", task.dueDate);
+            $("select#tcourse option[value='" + task.notifyCode + "']").attr("selected", "selected");
             // now open the popup
             $("#edit-task").popup("open");
         },
         taskPopupDeleteHandler: function () {
-            var cid = $("#edit-task-id").val();
-            
-            if (cid !== "") {
-                courseList.deleteCourse(cid);
+            var lid = $("#edit-task-id").val();
+            if (lid !== "") {
+                taskList.deleteTask(lid);
             }
-
             $("#edit-task").popup("close");
         },
-        taskPopupSaveBtnHandler: function () {
-            var due = $("#tdue").datepicker( "getDate" ),
-                notify = notifyDate(due, $("#tnotify").val());
+        taskPopupSaveBtn_WhenNew: function () {
             var section = makeAssignment(
                 $("#tname").val(),
                 $("#tdesc").val(),
                 $("#tcourse").val(),
-                due,
-                notify
+                $("#tdue").datepicker("getDate"),
+                $("#tnotify").val()
             );
             /* rudimentary opaque validation, no empty task names allowed */
             if (section.name !== "") {
-                taskList.saveTask(section);
+                taskList.addTask(section);
+            }
+            $("#edit-task").popup("close");
+        },
+        taskPopupSaveBtn_WhenEdit: function () {
+            var oldId = $("#edit-task-id").val();
+            var section = makeAssignment(
+                $("#tname").val(),
+                $("#tdesc").val(),
+                $("#tcourse").val(),
+                $("#tdue").datepicker("getDate"),
+                $("#tnotify").val()
+            );
+            /* rudimentary opaque validation, no empty task names allowed */
+            if (section.name !== "") {
+                taskList.editTask(oldId, section);
             }
             $("#edit-task").popup("close");
         },
         taskPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-task :text").val("");
+            $("#tdue").datepicker("hide");
         },
         /* generic and mostly useless SQL error printing callback */
         logSqlError: function (error, statement) {
@@ -627,13 +657,13 @@
         },
         makeSampleAssignments: function () {
             var someTasks = [
-                makeAssignment("Midterm", "SE Midterm", "ITEC 370", new Date(), null),
-                makeAssignment("Final", "SE Final", "ITEC 370", new Date(), null),
-                makeAssignment("HW", "SE Hw", "ITEC 370", new Date(), null),
-                makeAssignment("Quiz", "SE Quiz 2", "ITEC 370", new Date(), null),
+                makeAssignment("p1", "ITEC 110", "Programming assignment 1", new Date(), "none"),
+                makeAssignment("Homework 2", "MATH 151", "Chapter 3 problems 15-30", new Date(), "none"),
+                makeAssignment("paint", "ART 111", "finish masterpiece", new Date(), "none"),
+                makeAssignment("Quiz", "MATH 151", "Quiz on chapter 3", new Date(), "none"),
             ], i = 0, sTask = someTasks.length;
             for(i; i < sTask; i += 1) {
-                taskList.saveTask(someTasks[i]);
+                taskList.addTask(someTasks[i]);
             }
         },
         dropTables: function () {
@@ -677,11 +707,12 @@
          */
         getMainTaskListItem = function (taskObj) {
             var dueDateStr = (taskObj.dueDate === null ? "" : "Due: " + taskObj.dueDate.toDateString()),
-                notifyStr = (taskObj.notifyDate === null ? "(no notify)" : taskObj.notifyDate.toDateString()),
+                notifyDateStr = (taskObj.notifyDate === null ? "" : taskObj.notifyDate.toDateString()),
+                notifyStr =  notifyCodes[taskObj.notifyCode].display,
                 strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
-                taskObj.name, "<p>", taskObj.desc, "<br />", notifyStr,
-                "</p><p class='ui-li-aside'>", taskObj.course, "<br />",
-                dueDateStr, "</p></a></li>"];
+                    taskObj.name, "<p>", taskObj.desc, "<br />", dueDateStr,
+                    "</p><p class='ui-li-aside'>", taskObj.course, "<br />",
+                    notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
         /**

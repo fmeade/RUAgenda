@@ -69,6 +69,8 @@
                 <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-back ui-btn-icon-notext ui-btn-right">Close</a>
                 <form><fieldset>
                     <h3></h3>
+                    <input type="hidden" name ="edit-task-id" id="edit-task-id" value="" />
+
                     <label for="tname" class="ui-accessible">Assignment Name:</label>
                     <input type="text" name="edit-task-name" id="tname" placeholder="Ex: Test 2" value="">
 
@@ -99,8 +101,6 @@
                     <a href="#" id="edit-task-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
                 </fieldset></form>
             </div><!-- end edit-task popup -->
-            
-            
             
             <!-- class detail popup (new OR edit)
             (Mostly does not need to be dynamic, so we can genuinely hardcode it) -->
