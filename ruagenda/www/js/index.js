@@ -191,8 +191,6 @@
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
                         builders.updateCourseListDom();
-                        builders.updateTaskListDom();
-                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -503,6 +501,8 @@
          * @return {undefined}
          */
         deleteAllHandler: function () {
+            // make sure all the tasks are deleted before deleting thier courses
+            taskList.deleteAllTasks();
             courseList.deleteAllCourses();
             $("#popup-menu").popup("close");
         },
