@@ -719,6 +719,27 @@
                     notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
+        getCourseTaskListItem = function (cls) {
+            var list = buildTaskUL(cls.id),
+                numTask = list.length,
+                taskPiece = list.join("");
+                strPieces = ["", taskPiece, "</ul></div>"];
+            return strPieces.join("");
+        },
+        buildTaskUL = function (clsId) {
+            var list = ["",""],
+                task;
+
+            for(var i=0;i < taskList.length;i++)
+            {
+                if(taskList[i].course == clsId)
+                {
+                    task = ["<li>", "</li>"];
+                    list.push(task.join(""));
+                }
+            }
+            return list;
+        },
         /**
          * Returns raw html for one select option 
          * @param  {string} cid the course id for the option element
