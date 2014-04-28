@@ -201,7 +201,7 @@
             deleteAllCourses: function () {
                 for (var courseId in allCourses) {
                     if (allCourses.hasOwnProperty(courseId)) {
-                        courseList.deleteOne(courseId);
+                        courseList.deleteCourse(courseId);
                     }
                 }
             },
@@ -361,7 +361,7 @@
             deleteAllTasks: function () {
                 for (var id in allTasks) {
                     if (allTasks.hasOwnProperty(id)) {
-                        deleteTask(id);
+                        this.deleteTask(id);
                     }
                 }
             },
@@ -374,7 +374,7 @@
                 for (var id in allTasks) {
                     if (allTasks.hasOwnProperty(id) &&
                         allTasks[id].course === courseId) {
-                        deleteTask(id);
+                        this.deleteTask(id);
                     }
                 }
             },
@@ -449,12 +449,12 @@
         bindEvents: function () {
             document.addEventListener('deviceready', app.onDeviceReady, false);
             // bind for deleting everything
-            $("#delete-everything").on("click",app.dropTables);
-            $("#delete-everything").on("click",app.onDeviceReady);
-            // TODO: these events only need to be bound after db init?
+            $("#delete-everything").on("click", app.deleteAllHandler);
+            // course popup handlers
             $("#edit-class").on("popupafterclose", app.classPopupOnCloseHandler);
             $("#edit-class-delete").on("click", app.classPopupDeleteHandler);
             $("#edit-class-save").on("click", app.classPopupSaveBtnHandler);
+            // task popup handlers
             $("#add-new-task-btn").on("click", app.addNewTaskHandler);
             $("#edit-task").on("popupafterclose", app.taskPopupOnCloseHandler);
             $("#edit-task-delete").on("click", app.taskPopupDeleteHandler);
@@ -491,6 +491,14 @@
             // i don't know why this is has to be here... but wierd things happen without it.
             $("#tdue").datepicker("show");
             $("#tdue").datepicker("hide");
+        },
+        /**
+         * Fires when the user selects "delete everything" from setting popup menu
+         * @return {undefined}
+         */
+        deleteAllHandler: function () {
+            courseList.deleteAllCourses();
+            $("#popup-menu").popup("close");
         },
         /**
          * Bound to the onclick event for the "Add new class" item at the
