@@ -133,6 +133,7 @@
                     function () {
                         allCourses[course.name] = course;
                         builders.updateCourseListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -162,6 +163,7 @@
                         allCourses[courseId].times = newTime;
                         // trigger dom refresh
                         builders.updateCourseListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -189,7 +191,8 @@
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
                         builders.updateCourseListDom();
-                        // TODO: also update assignment list gui/view/bits
+                        builder.updateTaskListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -405,16 +408,19 @@
              * @return {Object { id: Array(Task Object)}}
              */
             getAllByClass: function () {
-                var id, cname, task, res = {};
+                var id, cname, task, res = {},
+                    cids = courseList.getCourseIds(),
+                    cidl = cids.length,
+                    i = 0;
+                // intialize arrays for each course
+                for (i; i < cidl; i += 1) {
+                    res[cids[i]] = [];
+                }
                 // add every task to an array accessed by course attribute of the task
                 for (id in allTasks) {
                     if (allTasks.hasOwnProperty(id)) {
                         task = allTasks[id];
                         cname = task.course;
-                        // if the result object doesn't have an array for this course name yet, make one
-                        if (res[cname] === undefined) {
-                            res[cname] = [];
-                        }
                         res[cname].push(task);
                     }
                 }
@@ -582,7 +588,11 @@
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
             $("#tname").text("");
+<<<<<<< HEAD
             $("#tdesc").text("");
+=======
+            $("#tdesc").val("");
+>>>>>>> c069f97644fbef8cd099eaedc888813e140972c1
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
@@ -728,8 +738,8 @@
                 notifyDateStr = (taskObj.notifyDate === null ? "" : taskObj.notifyDate.toDateString()),
                 notifyStr =  notifyCodes[taskObj.notifyCode].display,
                 strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
-                    taskObj.name, "<p>", taskObj.course, "<br />", dueDateStr,
-                    "</p><p class='ui-li-aside'>", taskObj.desc, "<br />",
+                    taskObj.name, "<p>", taskObj.course, "<br />", taskObj.desc,
+                    "</p><p class='ui-li-aside'>", dueDateStr, "<br />",
                     notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
