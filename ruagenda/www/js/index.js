@@ -405,16 +405,19 @@
              * @return {Object { id: Array(Task Object)}}
              */
             getAllByClass: function () {
-                var id, cname, task, res = {};
+                var id, cname, task, res = {},
+                    cids = courseList.getCourseIds(),
+                    cidl = cids.length,
+                    i = 0;
+                // intialize arrays for each course
+                for (i; i < cidl; i += 1) {
+                    res[cids[i]] = [];
+                }
                 // add every task to an array accessed by course attribute of the task
                 for (id in allTasks) {
                     if (allTasks.hasOwnProperty(id)) {
                         task = allTasks[id];
                         cname = task.course;
-                        // if the result object doesn't have an array for this course name yet, make one
-                        if (res[cname] === undefined) {
-                            res[cname] = [];
-                        }
                         res[cname].push(task);
                     }
                 }
@@ -581,8 +584,8 @@
             $("#edit-task-delete").hide();
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
-            $("#edit-task-name").text("");
-            $("#edit-task-description").text("");
+            $("#tname").text("");
+            $("#tdesc").val("");
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);

@@ -68,10 +68,12 @@
                     <input type="hidden" name ="edit-task-id" id="edit-task-id" value="" />
 
                     <label for="tname" class="ui-accessible">Assignment Name:</label>
-                    <input type="text" name="edit-task-name" id="tname" placeholder="Ex: Test 2" value="">
+                    <input type="text" name="edit-task-name" id="tname" 
+                        maxlength="80" placeholder="Ex: Test 2" value="">
 
                     <label for="tdesc" class="ui-accessible">Description:</label>
-                    <textarea name="edit-task-description" id="tdesc" maxlength="25" placeholder="Ex: Test on Recursion" value=""></textarea>
+                    <textarea name="edit-task-description" id="tdesc" 
+                        maxlength="300" placeholder="Ex: Test on Recursion" value=""></textarea>
 
                     <label for="tcourse" class="ui-accessible">Class:</label>
                     <select name="tcourse" id="tcourse" data-inline="false">
@@ -106,23 +108,23 @@
                     <h3></h3>
                     <label for="edit-class-id" class="">Class name:</label>
                     <input type="text" name="edit-class-id" id="edit-class-id" 
-                        placeholder="Ex: ITEC 220" value="" />
+                        maxlength="10" placeholder="Ex: ITEC 220" value="" />
                     
                     <label for="edit-class-title" class="">Class title:</label>
                     <input type="text" name="edit-class-title" id="edit-class-title" 
-                        placeholder="Ex: Computer Science II" value="" />
+                        maxlength="80" placeholder="Ex: Computer Science II" value="" />
                     
                     <label for="edit-class-who" class="">Professor:</label>
                     <input type="text" name="edit-class-who" id="edit-class-who" 
-                        placeholder="Ex: Dr. Chase" value="" />
+                        maxlength="30" placeholder="Ex: Dr. Chase" value="" />
                     
                     <label for="edit-class-when" class="">Meeting times:</label>
                     <input type="text" name="edit-class-when" id="edit-class-when" 
-                        placeholder="Ex: MWF 11-11:50 AM" value="" />
+                        maxlength="30" placeholder="Ex: MWF 11-11:50 AM" value="" />
                     
                     <label for="edit-class-where" class="">Location:</label>
                     <input type="text" name="edit-class-where" id="edit-class-where" 
-                        placeholder="Ex: DA 225" value="" />
+                        maxlength="30" placeholder="Ex: DA 225" value="" />
                     
                     <a href="#" id="edit-class-delete" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-delete">Delete</a>
                     <a href="#" id="edit-class-save" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-right ui-icon-check">Save</a>
