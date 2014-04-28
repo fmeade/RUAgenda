@@ -191,7 +191,7 @@
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
                         builders.updateCourseListDom();
-                        builder.updateTaskListDom();
+                        builders.updateTaskListDom();
                         builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
