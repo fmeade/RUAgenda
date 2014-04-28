@@ -133,6 +133,7 @@
                     function () {
                         allCourses[course.name] = course;
                         builders.updateCourseListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -162,6 +163,7 @@
                         allCourses[courseId].times = newTime;
                         // trigger dom refresh
                         builders.updateCourseListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -189,7 +191,8 @@
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
                         builders.updateCourseListDom();
-                        // TODO: also update assignment list gui/view/bits
+                        builder.updateTaskListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -731,8 +734,8 @@
                 notifyDateStr = (taskObj.notifyDate === null ? "" : taskObj.notifyDate.toDateString()),
                 notifyStr =  notifyCodes[taskObj.notifyCode].display,
                 strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
-                    taskObj.name, "<p>", taskObj.course, "<br />", dueDateStr,
-                    "</p><p class='ui-li-aside'>", taskObj.desc, "<br />",
+                    taskObj.name, "<p>", taskObj.course, "<br />", taskObj.desc,
+                    "</p><p class='ui-li-aside'>", dueDateStr, "<br />",
                     notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
