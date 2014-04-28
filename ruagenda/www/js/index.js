@@ -32,7 +32,7 @@
      * @param  {String} _notify
      * @return {Task Object}
      */
-    function makeAssignment (_name, _desc,_course, _due, _notify) {
+    function makeAssignment (_name, _desc, _course, _due, _notify) {
         // create a new object from the Object prototype
         var that = Object.create(null);
         // add our custom attributes
@@ -113,6 +113,7 @@
             }],
             function () {
                 builders.updateCourseListDom();
+                builders.updateCourseTaskListDom();
             },
             app.logSqlError
         );
@@ -293,6 +294,7 @@
             }],
             function () {
                 builders.updateTaskListDom();
+                builders.updateCourseTaskListDom();
             },
             app.logSqlError
         );
@@ -314,6 +316,7 @@
                     function () {
                         allTasks[taskObj.id] = taskObj;
                         builders.updateTaskListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -346,6 +349,7 @@
                     function () {
                         delete allTasks[taskId];
                         builders.updateTaskListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -596,7 +600,9 @@
             $("#edit-task-id").val(lid);
             $("#tname").val(task.name);
             $("#tdesc").val(task.desc);
+            $("select#tcourse option").removeAttr("selected");
             $("select#tcourse option[value='" + task.course + "']").attr("selected", "selected");
+            $("select#tcourse").selectmenu("refresh");
             $("#tdue").datepicker("setDate", task.dueDate);
             $("select#tcourse option[value='" + task.notifyCode + "']").attr("selected", "selected");
             // now open the popup
@@ -719,26 +725,32 @@
                     notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
-        getCourseTaskListItem = function (cls) {
-            var list = buildTaskUL(cls.id),
-                numTask = list.length,
-                taskPiece = list.join("");
-                strPieces = ["", taskPiece, "</ul></div>"];
-            return strPieces.join("");
-        },
-        buildTaskUL = function (clsId) {
-            var list = ["",""],
-                task;
-
-            for(var i=0;i < taskList.length;i++)
-            {
-                if(taskList[i].course == clsId)
-                {
-                    task = ["<li>", "</li>"];
-                    list.push(task.join(""));
-                }
+        /**
+         * Builds html for a list of assignments inside a task collapsible
+         * @param  {Array} taskArr array of task objects
+         * @return {String}         html for series of List Items
+         */
+        getCourseTaskList = function (taskArr) {
+            var items = [],
+                i = 0,
+                al = taskArr.length;
+            for (i; i < al; i += 1) {
+                items.push(getCourseTaskListItem(taskArr[i]));
             }
-            return list;
+            return items.join("");
+        },
+        /**
+         * Generates html for a single list item in the list of assignments
+         * for one class (inside a collapsible in tab two)
+         * @param  {Task Obj} task A task object
+         * @return {String}      html for a single list item
+         */
+        getCourseTaskListItem = function (task) {
+            var pieces = ["<li><a href='' class='task-list-item' id='",
+                task.id, "'>", task.name, "<p class='ui-li-aside'>",
+                (task.dueDate === null ? "" : "Due: " + task.dueDate.toDateString()),
+                "</p></a></li>"];
+            return pieces.join("");
         },
         /**
          * Returns raw html for one select option 
@@ -747,6 +759,20 @@
          */
         getCourseOptionHtml = function (cid) {
             var pieces = ["<option value='", cid, "'>", cid, "</option>"];
+            return pieces.join("");
+        },
+        /**
+         * Creates html for a class collapsible in the second tab
+         * @param  {String} cid     course id 
+         * @param  {Array} taskArr array of assignments for this class
+         * @return {String}         html for collapsible div
+         */
+        getClassCollapsibleHtml = function (cid, taskArr) {
+            var pieces = ["<div data-role='collapsible' id='", cid,
+            "' data-inset='false' data-collapsed-icon='carat-d' data-expanded-icon='carat-u'>\n",
+            "<h3>", cid, "<span class='ui-li-count'>", taskArr.length, "</span></h3>\n",
+            "<ul data-role='listview' data-icon='edit'>\n",
+            getCourseTaskList(taskArr), "</ul></div>"];
             return pieces.join("");
         };
         return {
@@ -806,6 +832,23 @@
                 }
                 $("select#tcourse option:first").attr("selected", "selected");
                 $("select#tcourse").selectmenu("refresh");
+            },
+            /**
+             * Updates tab two (course collapsibles containing assignment lists)
+             * @return {undefined}
+             */
+            updateCourseTaskListDom: function () {
+                var id, map, collapsible;
+                $("div#two").empty();
+                map = taskList.getAllByClass();
+                for (id in map) {
+                    if (map.hasOwnProperty(id)) {
+                        collapsible = getClassCollapsibleHtml(id, map[id]);
+                        $(collapsible).appendTo("div#two");
+                    }
+                }
+                $("div[data-role='collapsible']").on("click", "li a.task-list-item", app.editTaskHandler);
+                $("div#two").enhanceWithin();
             }
         };    // end builders public methods
     }());    // end builders singleton

@@ -45,13 +45,11 @@
 
             <div data-role="header">
                 <a href="#AddAssignment" data-rel="popup" class="ui-btn ui-btn-inline 
-                    ui-icon-plus ui-corner-all ui-btn-icon-notext" id="add-new-task-btn">Add an Assignment</a>
+                    ui-icon-plus ui-corner-all ui-btn-icon-right" id="add-new-task-btn">New...</a>
                 <h1>RU Agenda</h1>
                 <a href="#popup-menu" data-rel="popup" class="ui-btn ui-btn-inline 
                     ui-icon-gear ui-btn-icon-notext ui-corner-all">Settings</a>
             </div><!-- /header -->
-            
-            
             
             <!-- top right menu -->
             <div data-role="popup" id="popup-menu" class="popupParent">
@@ -61,8 +59,6 @@
                     <li><a href="#">Notification Toggle</a></li>
                 </ul>
             </div><!-- end popup menu -->
-            
-            
             
             <!-- Assignment detail popup (new OR edit) -->
             <div data-role="popup" id="edit-task" class="ui-content" data-overlay-theme="a">
@@ -133,8 +129,6 @@
                 </fieldset></form>
             </div> <!-- end edit-class popup-->
  
- 
- 
             <!-- USELESS sign-in form -->
             <div data-role="popup" id="sign-in" class="ui-content popupChild" data-overlay-theme="a">
                 <form>
@@ -148,7 +142,8 @@
             </div>
             
             <div data-role="tabs" id="tabs">
-
+                
+                <!-- tab navigation -->
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#one" data-ajax="false" class="ui-btn-active">By Due Date</a></li>
@@ -156,8 +151,6 @@
                         <li><a href="#three" data-ajax="false">Class Schedule</a></li>
                     </ul>
                 </div>
-
-
 
                 <!-- first tab content here -->
                 <div id="one" class="ui-content">
@@ -169,27 +162,10 @@
                     
                 </div>
 
-
-
                 <!-- second tab content here -->
                 <div id="two" class="ui-content">
-
-                    <!-- Dropdown for each class containing their assignments -->
-
-                    <!-- TODO: Inset inner list view -->
-                    
-                   <!-- <div data-role="collapsible" data-inset="false"           -- Each Class 
-                        data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
-                        <h3> + Class + <span class="ui-li-count"> + Num Assignments + </span></h3>
-                        <ul data-role="listview" data-icon="edit">
-                            <li><a href="#"> + Assignment name +       -- Each Assignment
-                                <p class="ui-li-aside"> + Due Date + </p>
-                            </a></li>
-                        </ul>
-                        
-                    </div><!--/collapsible-->
-                    
-                </div><!--/tab two->
+                    <!-- generated -->
+                </div><!--/tab two-->
 
                 <!-- third tab content here -->
                 <div id="three" class="ui-body-d ui-content">
