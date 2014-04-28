@@ -581,8 +581,8 @@
             $("#edit-task-delete").hide();
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
-            $("#edit-task-name").text("");
-            $("#edit-task-description").text("");
+            $("#tname").text("");
+            $("#tdesc").text("");
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
