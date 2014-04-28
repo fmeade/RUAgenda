@@ -588,11 +588,7 @@
             // set the 'legend' text
             $("div#edit-task h3").text("Add a new Assignment");
             $("#tname").text("");
-<<<<<<< HEAD
-            $("#tdesc").text("");
-=======
             $("#tdesc").val("");
->>>>>>> c069f97644fbef8cd099eaedc888813e140972c1
             // set save handler
             $("#edit-task-save").off("click");
             $("#edit-task-save").on("click", app.taskPopupSaveBtn_WhenNew);
