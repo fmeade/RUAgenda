@@ -191,6 +191,7 @@
                         delete allCourses[courseId];
                         taskList.deleteTasksByCourse(courseId);
                         builders.updateCourseListDom();
+                        builders.updateCourseTaskListDom();
                     },
                     app.logSqlError
                 );
@@ -419,6 +420,11 @@
                     if (allTasks.hasOwnProperty(id)) {
                         task = allTasks[id];
                         cname = task.course;
+                        // #kludge: this is required because getCourseIds will not always 
+                        // be in sync with the courses in the task list
+                        if (res[cname] === undefined) {
+                            res[cname] = [];
+                        }
                         res[cname].push(task);
                     }
                 }
