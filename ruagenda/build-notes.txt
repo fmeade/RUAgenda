@@ -1,0 +1,24 @@
+(2014-05-01)
+
+This archive does not contain a 'local.properties' file in the android platform subdirectory, so immediately attempting to rebuild will throw errors.  In order to generate a local.properties file for the android platform, run 
+`android update project -s -p platforms/android` from the project root.
+After the local.properties file has been generated, the app can be built using the PhoneGap 3.3 CLI interface using
+`phonegap build android`
+and tested on a device or emulator with
+`phonegap install android`
+
+Alternatively, one can simple delete the entire android project subdirectory, and have PhoneGap rebuild it from scratch.  This will lose the custom application icon, but should completely avoid any problems encountered with the process described above. From the project root, running:
+`rm -rf platforms/android`
+`cordova platform add android`
+`phonegap build android`
+`phonegap install android`
+.. in sequence should successfully build and launch the app.
+
+Primary source files are 'www/index.html' and 'www/js/html'.
+
+Third-party JavaScript:
+jQuery        http://jquery.com/
+jQuery UI     http://jqueryui.com/
+jQuery Mobile http://jquerymobile.com/
+html5sql.js   http://html5sql.com/
+md5.js        http://www.myersdaily.org/joseph/javascript/md5-text.html

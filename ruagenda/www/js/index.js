@@ -1,10 +1,12 @@
-/*  index.js
- *  Bowtie Code - Spring 2014
- *
- *  JavaScript code for the RU Agenda Phonegap application
- *
- * TODO: migrate database functionality to 'com.phonegap.plugins.sqlite'
- * @see https://github.com/brodysoft/Cordova-SQLitePlugin
+/*
+    index.js
+    Copyright (c) 2014 Bowtie Code
+
+    JavaScript code for the 'RU Agenda' PhoneGap application
+    < www.radford.edu/softeng10 >
+
+    TODO: migrate database functionality to 'com.phonegap.plugins.sqlite'
+    @see https://github.com/brodysoft/Cordova-SQLitePlugin
  */
 (function () {
     /* yes please */
@@ -588,6 +590,9 @@
         classPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-class :text").val("");
         },
+        /**
+         * Handler for the Add New Assignment button
+         */
         addNewTaskHandler: function () {
             // hide the delete/remove button
             $("#edit-task-delete").hide();
@@ -603,6 +608,11 @@
             // now open the popup
             $("#edit-task").popup("open");
         },
+        /**
+         * Handler for editing an existing assignment list item
+         * @param  {Event} event @unused
+         * @return {undefined}
+         */
         editTaskHandler: function (event) {
             var lid, task;
             // show the delete/remove button
@@ -628,6 +638,10 @@
             // now open the popup
             $("#edit-task").popup("open");
         },
+        /**
+         * Hanlder for the Delete button in the edit assignment popup
+         * @return {undefined}
+         */
         taskPopupDeleteHandler: function () {
             var lid = $("#edit-task-id").val();
             if (lid !== "") {
@@ -635,6 +649,11 @@
             }
             $("#edit-task").popup("close");
         },
+        /**
+         * Handler for the save button in the assignment detail popup
+         * when creating a new assignment
+         * @return {undefined}
+         */
         taskPopupSaveBtn_WhenNew: function () {
             var section = makeAssignment(
                 $("#tname").val(),
@@ -649,6 +668,11 @@
             }
             $("#edit-task").popup("close");
         },
+        /**
+         * Handler for the save button in the assignment detail popup
+         * when we are editing anf exisiting assignment
+         * @return {[type]} [description]
+         */
         taskPopupSaveBtn_WhenEdit: function () {
             var oldId = $("#edit-task-id").val();
             var section = makeAssignment(
@@ -664,11 +688,21 @@
             }
             $("#edit-task").popup("close");
         },
+        /**
+         * Catches the popup on close event for the assignment detail popup
+         * @return {undefined}
+         */
         taskPopupOnCloseHandler: function (/*event, ui*/) {
             $("#edit-task :text").val("");
             $("#tdue").datepicker("hide");
         },
-        /* generic and mostly useless SQL error printing callback */
+        /**
+         * Generic and mostly useless loggint function to use as default
+         * SQL processing error callback
+         * @param  {Object?} error     Error message
+         * @param  {Object} statement The SQL statement 
+         * @return {undefined}
+         */
         logSqlError: function (error, statement) {
             console.log(error);
             console.log(statement);
@@ -737,12 +771,12 @@
          */
         getMainTaskListItem = function (taskObj) {
             var dueDateStr = (taskObj.dueDate === null ? "" : "Due: " + taskObj.dueDate.toDateString()),
-                notifyDateStr = (taskObj.notifyDate === null ? "" : taskObj.notifyDate.toDateString()),
+                notifyDateStr = (taskObj.notifyDate === null ? "" : "(" + taskObj.notifyDate.toDateString() + ")"),
                 notifyStr =  notifyCodes[taskObj.notifyCode].display,
                 strPieces = ["<li><a href='#' id='", taskObj.id, "' class='task-list-item'>",
-                    taskObj.name, "<p>", taskObj.course, "<br />", taskObj.desc,
+                    taskObj.name, "<p>", taskObj.course, "</p><p>", taskObj.desc,
                     "</p><p class='ui-li-aside'>", dueDateStr, "<br />",
-                    notifyStr, "<br />", notifyDateStr, "</p></a></li>"];
+                    notifyStr, " ", notifyDateStr, "</p></a></li>"];
             return strPieces.join("");
         },
         /**
